@@ -131,4 +131,10 @@ class State:
             else:
                 return 0
 
-    
+    def isgoalstate(self, type=0):
+        if 0 in [item[0] for item in self.white_positions] or len(self.black_positions) == 0:
+            return 2
+        if self.height - 1 in [item[0] for item in self.black_positions] or len(self.white_positions) == 0:
+            return 1
+        return 0
+        
