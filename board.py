@@ -75,4 +75,33 @@ class State:
                     if boardmatrix[i][j] == 2:
                         self.white_positions.append((i, j))
                         self.white_num += 1
-    
+# State.transfer(action), given an action, return a resultant state
+    def transfer(self, action):
+        black_pos = list(self.black_positions)
+        white_pos = list(self.white_positions)
+
+        # black turn
+        if action.turn == 1:
+            if action.coordinate in self.black_positions:
+                index = black_pos.index(action.coordinate)
+                new_pos = single_move(action.coordinate, action.direction, action.turn)
+                black_pos[index] = new_pos
+                if new_pos in self.white_positions:
+                    white_pos.remove(new_pos)
+            else:
+                print("Invalid action!")
+        # white turn
+        elif action.turn == 2:
+            if action.coordinate in self.white_positions:
+                index = white_pos.index(action.coordinate)
+                new_pos = single_move(action.coordinate, action.direction, action.turn)
+                white_pos[index] = new_pos
+                if new_pos in self.black_positions:
+                    black_pos.remove(new_pos)
+            else:
+                print("Invalid action!")
+
+        state = State(black_position=black_pos, white_position=white_pos, black_num=self.black_num,
+        white_num=self.white_num, turn=alterturn(action.turn), function=self.function,
+        height=self.height, width=self.width)
+        return state
