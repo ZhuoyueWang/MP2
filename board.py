@@ -137,4 +137,9 @@ class State:
         if self.height - 1 in [item[0] for item in self.black_positions] or len(self.white_positions) == 0:
             return 1
         return 0
-        
+
+    def get_farthest_piece(self, turn):
+        if turn == 1:
+            return max(pos[0] for pos in self.black_positions)
+        elif turn == 2:
+            return max(7 - pos[0] for pos in self.white_positions)
