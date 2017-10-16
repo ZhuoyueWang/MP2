@@ -105,3 +105,30 @@ class State:
         white_num=self.white_num, turn=alterturn(action.turn), function=self.function,
         height=self.height, width=self.width)
         return state
+
+    def getMatrix(self):
+        matrix = [[0 for i in range(self.width)] for i in range(self.height)]
+        for item in self.black_positions:
+            matrix[item[0]][item[1]] = 1
+        for item in self.white_positions:
+            matrix[item[0]][item[1]] = 2
+        return matrix
+
+    def finalScore(self, turn):
+        score = 200
+        if turn == 1:
+            if self.isgoalstate() == 1:
+                return score
+            elif self.isgoalstate() == 2:
+                return -score
+            else:
+                return 0
+        elif turn == 2:
+            if self.isgoalstate() == 2:
+                return score
+            elif self.isgoalstate() == 1:
+                return -score
+            else:
+                return 0
+
+    
