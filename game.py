@@ -5,4 +5,9 @@ import sys, os, math
 import time
 
 class game:
-    
+    def __init__(self):
+
+
+
+
+    def run(self):
