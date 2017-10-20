@@ -11,3 +11,15 @@ class game:
 
 
     def run(self):
+
+
+
+
+
+    def main():
+        game = game()
+        while 1:
+            game.run()
+
+    if __name__ == '__main__':
+        main()
