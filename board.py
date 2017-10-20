@@ -131,6 +131,30 @@ class State:
             else:
                 return 0
 
+    def myscore(self, turn):
+        if turn == 1:
+            return len(self.black_positions) \
+                   + sum(pos[0] for pos in self.black_positions) + self.winningscore(turn)
+                   #+ max(pos[0] for pos in self.black_positions) \
+
+        elif turn == 2:
+            return len(self.white_positions) \
+                   + sum(7 - pos[0] for pos in self.white_positions) + self.winningscore(turn)
+                   #+ max(7 - pos[0] for pos in self.white_positions) \
+
+
+    def enemyscore(self, turn):
+        if turn == 1:
+            return len(self.white_positions) \
+                   + sum(7 - pos[0] for pos in self.white_positions) + self.winningscore(2)
+                   #+ max(7 - pos[0] for pos in self.white_positions)\
+
+        elif turn == 2:
+            return len(self.black_positions) \
+                   + sum(pos[0] for pos in self.black_positions) + self.winningscore(1)
+                   #+ max(pos[0] for pos in self.black_positions) \
+
+
     def isgoalstate(self, type=0):
         if 0 in [item[0] for item in self.white_positions] or len(self.black_positions) == 0:
             return 2
@@ -143,3 +167,28 @@ class State:
             return max(pos[0] for pos in self.black_positions)
         elif turn == 2:
             return max(7 - pos[0] for pos in self.white_positions)
+
+# num of vertical pairs for Black or White
+    def get_vertical_pairs(self, turn):
+        res = 0
+        if turn == 1:
+            for black in self.black_positions:
+                if (black[0] + 1, black[1]) in self.black_positions:
+                    res += 1
+        elif turn == 2:
+            for white in self.white_positions:
+                if (white[0] + 1, white[1]) in self.white_positions:
+                    res += 1
+        return res
+
+
+    def offensive_function(self, turn):
+
+    #    2 * offensive_component + defensive_componet + tie_breaking
+        return 2 * self.myscore(turn) - 1 * self.enemyscore(turn)
+               #+  self.get_important_pos_baseline(turn)
+
+    def defensive_function(self, turn):
+    #    2 * defensive_component + offensive_componet + tie_breaking
+        return 1 * self.myscore(turn) - 2 * self.enemyscore(turn)
+               #+ 2 * self.get_vertical_pairs(turn) + 4 * self.get_important_pos_baseline(turn)
