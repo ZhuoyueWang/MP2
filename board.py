@@ -39,7 +39,7 @@ def switchTurn(turn):
     if turn == 2:
         return 1
 
-class Status:
+class status:
     def __init__(self, coordinate, direction, turn):
         self.coordinate = coordinate
         self.direction = direction
@@ -49,7 +49,7 @@ class Status:
     def getCoordinate_x(self):
         return self.coordinate[0]
 
-class State:
+class state:
     def __init__(self, boardmatrix=None, black_position=None, white_position=None, black_num=0,
          white_num=0, turn=1, function=0, width=8, height=8):
         self.width = width
