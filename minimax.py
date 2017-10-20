@@ -1,5 +1,5 @@
 import numpy as np
-from model import *
+from board import *
 
 
 class MinimaxAgent:
