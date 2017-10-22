@@ -39,7 +39,7 @@ def switchTurn(turn):
     if turn == 2:
         return 1
 
-class status:
+class Action:
     def __init__(self, coordinate, direction, turn):
         self.coordinate = coordinate
         self.direction = direction
@@ -49,7 +49,7 @@ class status:
     def getCoordinate_x(self):
         return self.coordinate[0]
 
-class state:
+class State:
     def __init__(self, boardmatrix=None, black_position=None, white_position=None, black_num=0,
          white_num=0, turn=1, function=0, width=8, height=8):
         self.width = width
@@ -84,7 +84,7 @@ class state:
         if action.turn == 1:
             if action.coordinate in self.black_positions:
                 index = black_pos.index(action.coordinate)
-                new_pos = single_move(action.coordinate, action.direction, action.turn)
+                new_pos = singleMove(action.coordinate, action.direction, action.turn)
                 black_pos[index] = new_pos
                 if new_pos in self.white_positions:
                     white_pos.remove(new_pos)
@@ -94,7 +94,7 @@ class state:
         elif action.turn == 2:
             if action.coordinate in self.white_positions:
                 index = white_pos.index(action.coordinate)
-                new_pos = single_move(action.coordinate, action.direction, action.turn)
+                new_pos = singleMove(action.coordinate, action.direction, action.turn)
                 white_pos[index] = new_pos
                 if new_pos in self.black_positions:
                     black_pos.remove(new_pos)
@@ -102,7 +102,7 @@ class state:
                 print("Invalid action!")
 
         state = State(black_position=black_pos, white_position=white_pos, black_num=self.black_num,
-        white_num=self.white_num, turn=alterturn(action.turn), function=self.function,
+        white_num=self.white_num, turn=switchTurn(action.turn), function=self.function,
         height=self.height, width=self.width)
         return state
 
