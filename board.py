@@ -106,6 +106,30 @@ class state:
         height=self.height, width=self.width)
         return state
 
+        def available_actions(self):
+            available_actions = []
+            if self.turn == 1:
+                for pos in sorted(self.black_positions, key=lambda p: (p[0], -p[1]), reverse=True):
+                # ======Caution!======
+                    if pos[0] != self.height - 1 and pos[1] != 0 and (pos[0] + 1, pos[1] - 1) not in self.black_positions:
+                        available_actions.append(Action(pos, 1, 1))
+                    if pos[0] != self.height - 1 and (pos[0] + 1, pos[1]) not in self.black_positions and (pos[0] + 1, pos[1]) not in self.white_positions:
+                        available_actions.append(Action(pos, 2, 1))
+                        if pos[0] != self.height - 1 and pos[1] != self.width - 1 and (pos[0] + 1, pos[1] + 1) not in self.black_positions:
+                            available_actions.append(Action(pos, 3, 1))
+
+            elif self.turn == 2:
+                for pos in sorted(self.white_positions, key=lambda p: (p[0], p[1])):
+                # ======Caution!======
+                    if pos[0] != 0 and pos[1] != 0 and (pos[0] - 1, pos[1] - 1) not in self.white_positions:
+                        available_actions.append(Action(pos, 1, 2))
+                    if pos[0] != 0 and (pos[0] - 1, pos[1]) not in self.black_positions and (pos[0] - 1, pos[1]) not in self.white_positions:
+                        available_actions.append(Action(pos, 2, 2))
+                    if pos[0] != 0 and pos[1] != self.width - 1 and (pos[0] - 1, pos[1] + 1) not in self.white_positions:
+                        available_actions.append(Action(pos, 3, 2))
+
+            return available_actions
+
     def getMatrix(self):
         matrix = [[0 for i in range(self.width)] for i in range(self.height)]
         for item in self.black_positions:
@@ -113,46 +137,6 @@ class state:
         for item in self.white_positions:
             matrix[item[0]][item[1]] = 2
         return matrix
-
-    def finalScore(self, turn):
-        score = 200
-        if turn == 1:
-            if self.isgoalstate() == 1:
-                return score
-            elif self.isgoalstate() == 2:
-                return -score
-            else:
-                return 0
-        elif turn == 2:
-            if self.isgoalstate() == 2:
-                return score
-            elif self.isgoalstate() == 1:
-                return -score
-            else:
-                return 0
-
-    def myscore(self, turn):
-        if turn == 1:
-            return len(self.black_positions) \
-                   + sum(pos[0] for pos in self.black_positions) + self.winningscore(turn)
-                   #+ max(pos[0] for pos in self.black_positions) \
-
-        elif turn == 2:
-            return len(self.white_positions) \
-                   + sum(7 - pos[0] for pos in self.white_positions) + self.winningscore(turn)
-                   #+ max(7 - pos[0] for pos in self.white_positions) \
-
-
-    def enemyscore(self, turn):
-        if turn == 1:
-            return len(self.white_positions) \
-                   + sum(7 - pos[0] for pos in self.white_positions) + self.winningscore(2)
-                   #+ max(7 - pos[0] for pos in self.white_positions)\
-
-        elif turn == 2:
-            return len(self.black_positions) \
-                   + sum(pos[0] for pos in self.black_positions) + self.winningscore(1)
-                   #+ max(pos[0] for pos in self.black_positions) \
 
 
     def isgoalstate(self, type=0):
@@ -168,27 +152,91 @@ class state:
         elif turn == 2:
             return max(7 - pos[0] for pos in self.white_positions)
 
-# num of vertical pairs for Black or White
-    def get_vertical_pairs(self, turn):
-        res = 0
-        if turn == 1:
-            for black in self.black_positions:
-                if (black[0] + 1, black[1]) in self.black_positions:
-                    res += 1
-        elif turn == 2:
-            for white in self.white_positions:
-                if (white[0] + 1, white[1]) in self.white_positions:
-                    res += 1
-        return res
 
+    def winningscore(self, turn):
+        winningvalue = 200
+        if turn == 1:
+            if self.isgoalstate() == 1:
+                return winningvalue
+            elif self.isgoalstate() == 2:
+                return -winningvalue
+            else:
+                return 0
+        elif turn == 2:
+            if self.isgoalstate() == 2:
+                return winningvalue
+            elif self.isgoalstate() == 1:
+                return -winningvalue
+        else:
+            return 0
+
+
+    def utility(self, turn):
+        #print(turn)
+        if self.function == 0:
+            return 0
+        elif self.function == 1:
+            return self.offensive_function(turn)
+        elif self.function == 2:
+            return self.defensive_function(turn)
+        elif self.function == 3:
+            return self.offensive_function_long(turn)
+        elif self.function == 4:
+            return self.defensive_function_long(turn)
+
+
+    def myscore(self, turn):
+        if turn == 1:
+            return len(self.black_positions) \
+                   + sum(pos[0] for pos in self.black_positions) + self.winningscore(turn)
+
+        elif turn == 2:
+            return len(self.white_positions) \
+                   + sum(7 - pos[0] for pos in self.white_positions) + self.winningscore(turn)
+
+
+    def enemyscore(self, turn):
+        if turn == 1:
+            return len(self.white_positions) \
+                   + sum(7 - pos[0] for pos in self.white_positions) + self.winningscore(2)
+                   #+ max(7 - pos[0] for pos in self.white_positions)\
+
+        elif turn == 2:
+            return len(self.black_positions) \
+                   + sum(pos[0] for pos in self.black_positions) + self.winningscore(1)
+                   #+ max(pos[0] for pos in self.black_positions) \
+
+    def myscore_long(self, turn):
+        if turn == 1:
+            return  len(self.black_positions) \
+                   + 5 * sum(pos[0] for pos in self.black_positions) \
+                   + self.winningscore(turn)
+
+        elif turn == 2:
+            return len(self.white_positions) \
+                   + 5 *sum(7 - pos[0] for pos in self.white_positions) \
+                   + self.winningscore(turn)
+
+    def enemyscore_long(self, turn):
+        if turn == 1:
+            return len(self.white_positions) \
+                   + 5 * sum(7 - pos[0] for pos in self.white_positions) \
+                   + self.winningscore(2)
+        elif turn == 2:
+            return len(self.black_positions) \
+                   + 5 * sum(pos[0] for pos in self.black_positions) \
+                   + self.winningscore(1)
 
     def offensive_function(self, turn):
-
-    #    2 * offensive_component + defensive_componet + tie_breaking
-        return 2 * self.myscore(turn) - 1 * self.enemyscore(turn)
-               #+  self.get_important_pos_baseline(turn)
+    #    2 * offensive_component + defensive_componet
+        return 2 * self.myscore(turn) - self.enemyscore(turn)
 
     def defensive_function(self, turn):
-    #    2 * defensive_component + offensive_componet + tie_breaking
-        return 1 * self.myscore(turn) - 2 * self.enemyscore(turn)
-               #+ 2 * self.get_vertical_pairs(turn) + 4 * self.get_important_pos_baseline(turn)
+    #    2 * defensive_component + offensive_componet
+        return self.myscore(turn) - 2 * self.enemyscore(turn)
+
+    def offensive_function_long(self, turn):
+        return 4 * self.myscore_long(turn) - self.enemyscore_long(turn)
+
+    def defensive_function_long(self, turn):
+        return self.myscore_long(turn) - 4 * self.enemyscore_long(turn)
