@@ -74,22 +74,22 @@ class BreakthroughGame:
                 self.total_time_1 += (time.clock() - start)
                 self.total_step_1 += 1
                 print( 'Black: \n'
-                    'total steps = ', self.total_step_1, '\n'
-                      'total expaned nodes = ', self.total_nodes_1, '\n'
-                      'average expaned nodes per move = ', self.total_nodes_1 / self.total_step_1, '\n'
-                      'average time per move = ', self.total_time_1 / self.total_step_1, '\n'
-                      'number of captured workers = ', self.eat_piece)
+                    'total steps =', self.total_step_1, '\n'
+                      'total expaned nodes =', self.total_nodes_1, '\n'
+                      'average expaned nodes per move =', self.total_nodes_1 / self.total_step_1, '\n'
+                      'average time per move =', self.total_time_1 / self.total_step_1, '\n'
+                      'number of captured workers =', self.eat_piece)
             elif self.turn == 2:
                 start = time.clock()
                 self.ai_move(1, 2)
                 self.total_time_2 += (time.clock() - start)
                 self.total_step_2 += 1
                 print( 'White: \n'
-                    'total steps = ', self.total_step_2, '\n'
-                      'total expaned nodes = ', self.total_nodes_2, '\n'
-                      'average expaned nodes per move = ', self.total_nodes_2 / self.total_step_2, '\n'
-                      'average time per move = ', self.total_time_2 / self.total_step_2, '\n'
-                      'number of captured workers = ', self.eat_piece)
+                    'total steps =', self.total_step_2, '\n'
+                      'total expaned nodes =', self.total_nodes_2, '\n'
+                      'average expaned nodes per move =', self.total_nodes_2 / self.total_step_2, '\n'
+                      'average time per move =', self.total_time_2 / self.total_step_2, '\n'
+                      'number of captured workers =', self.eat_piece)
 
         # Events accepting
         for event in pygame.event.get():
@@ -190,19 +190,19 @@ class BreakthroughGame:
             if self.turn == 1:
                 print("Black Win!")
                 print( 'Black: \n'
-                    'total steps = ', self.total_step_1, '\n'
-                      'total expaned nodes = ', self.total_nodes_1, '\n'
-                      'average expaned nodes per move = ', self.total_nodes_1 / self.total_step_1, '\n'
-                      'average time per move = ', self.total_time_1 / self.total_step_1, '\n'
-                      'number of captured workers = ', self.eat_piece)
+                    'total steps =', self.total_step_1, '\n'
+                      'total expaned nodes =', self.total_nodes_1, '\n'
+                      'average expaned nodes per move =', self.total_nodes_1 / self.total_step_1, '\n'
+                      'average time per move =', self.total_time_1 / self.total_step_1, '\n'
+                      'number of captured workers =', self.eat_piece)
             else:
                 print("White Win!")
                 print( 'White: \n'
-                    'total steps = ', self.total_step_2, '\n'
-                      'total expaned nodes = ', self.total_nodes_2, '\n'
-                      'average expaned nodes per move = ', self.total_nodes_2 / self.total_step_2, '\n'
-                      'average time per move = ', self.total_time_2 / self.total_step_2, '\n'
-                      'number of captured workers = ', self.eat_piece)
+                    'total steps =', self.total_step_2, '\n'
+                      'total expaned nodes =', self.total_nodes_2, '\n'
+                      'average expaned nodes per move =', self.total_nodes_2 / self.total_step_2, '\n'
+                      'average time per move =', self.total_time_2 / self.total_step_2, '\n'
+                      'number of captured workers =', self.eat_piece)
             rect = pygame.Rect(0, 0, 560, 560)
             sub = self.screen.subsurface(rect)
             pygame.image.save(sub, "screenshot.jpg")
