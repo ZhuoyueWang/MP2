@@ -152,30 +152,6 @@ class State:
             return 1
         return 0
 
-    def get_farthest_piece(self, turn):
-        if turn == 1:
-            return max(pos[0] for pos in self.black_positions)
-        elif turn == 2:
-            return max(7 - pos[0] for pos in self.white_positions)
-
-
-    def winningscore(self, turn):
-        winningvalue = 200
-        if turn == 1:
-            if self.isgoalstate() == 1:
-                return winningvalue
-            elif self.isgoalstate() == 2:
-                return -winningvalue
-            else:
-                return 0
-        elif turn == 2:
-            if self.isgoalstate() == 2:
-                return winningvalue
-            elif self.isgoalstate() == 1:
-                return -winningvalue
-        else:
-            return 0
-
 
     def utility(self, turn):
         #print(turn)
@@ -186,9 +162,9 @@ class State:
         elif self.function == 2:
             return self.defensive_function(turn)
         elif self.function == 3:
-            return self.offensive_function_long(turn)
+            return self.offensive_function2(turn)
         elif self.function == 4:
-            return self.defensive_function_long(turn)
+            return self.defensive_function2(turn)
 
 
     def myscore(self, turn):
@@ -216,8 +192,8 @@ class State:
     #    2 * defensive_component + random()
         return 6*self.myscore(turn) + random.random()
 
-    def offensive_function_long(self, turn):
+    def offensive_function2(self, turn):
         return 6*self.myscore(turn) - self.enemyscore(turn)
 
-    def defensive_function_long(self, turn):
+    def defensive_function2(self, turn):
         return self.myscore(turn) - 6*self.enemyscore(turn)
