@@ -33,7 +33,7 @@ class AlphaBetaAgent:
             alpha = max(alpha, v)
         return v
 
-   def min_value(self, state, alpha, beta, depth):
+    def min_value(self, state, alpha, beta, depth):
         if depth == self.maxdepth or state.isgoalstate() != 0:
             return state.utility(self.turn)
         v = MAXNUM
@@ -78,3 +78,6 @@ class AlphaBetaAgent:
             self.piece_num = initialstate.transfer(final_action).black_num
         print(final_action.getString())
         return initialstate.transfer(final_action), self.nodes, self.piece_num
+
+    def orderaction(self, action, state):
+        return 0
