@@ -203,6 +203,11 @@ class BreakthroughGame:
                       'average expaned nodes per move = ', self.total_nodes_2 / self.total_step_2, '\n'
                       'average time per move = ', self.total_time_2 / self.total_step_2, '\n'
                       'number of captured workers = ', self.eat_piece)
+            rect = pygame.Rect(0, 0, 560, 560)
+            sub = self.screen.subsurface(rect)
+            pygame.image.save(sub, "screenshot.jpg")
+            sys.exit()
+
 
     def movechess(self):
         self.boardmatrix[self.new_x][self.new_y] = self.boardmatrix[self.ori_x][self.ori_y]
@@ -213,12 +218,6 @@ class BreakthroughGame:
             self.turn = 1
         self.status = 0
 
-
-#    def isauto(self, pos):
-    #    x, y = pos
-#        if 590 <= x <= 670 and 340 <= y <= 420:
-    #        return True
-#        return False
 
     def isabletomove(self):
         if (self.boardmatrix[self.ori_x][self.ori_y] == 1
@@ -276,30 +275,6 @@ class BreakthroughGame:
                     if 1 in line or 2 in line:
                         return False
             return True
-        else:
-            count = 0
-            for i in self.boardmatrix[0]:
-                if i == 2:
-                    count += 1
-            if count == 3:
-                return True
-            count = 0
-            for i in self.boardmatrix[7]:
-                if i == 1:
-                    count += 1
-            if count == 3:
-                return True
-            count1 = 0
-            count2 = 0
-            for line in self.boardmatrix:
-                for i in line:
-                    if i == 1:
-                        count1 += 1
-                    elif i == 2:
-                        count2 += 1
-            if count1 <= 2 or count2 <= 2:
-                return True
-        return False
 
 def main():
     game = BreakthroughGame()
