@@ -2,7 +2,7 @@ import numpy as np
 from board import *
 
 
-class MinimaxAgent:
+class minimax:
     def __init__(self, boardmatrix, turn, depth, function, type=0):
         self.boardmatrix = boardmatrix
         self.turn = turn
@@ -12,28 +12,27 @@ class MinimaxAgent:
         self.nodes = 0
         self.piece_num = 0
 
-    def max_value(self, state, depth):
+    def MAX(self, state, depth):
         if depth == self.maxdepth or state.isgoalstate() != 0:
             #print("utility", state.utility(self.turn))
             return state.utility(self.turn)
         v = MINNUM
         for action in state.available_actions():
             # print(state.transfer(action).getMatrix())
-            v = max(v, self.min_value(state.transfer(action), depth + 1))
+            v = max(v, self.MIN(state.transfer(action), depth + 1))
             self.nodes += 1
         return v
 
-    def min_value(self, state, depth):
+    def MIN(self, state, depth):
         if depth == self.maxdepth or state.isgoalstate() != 0:
             #print("utility", state.utility(self.turn))
             return state.utility(self.turn)
         v = MAXNUM
         for action in state.available_actions():
-            v = min(v, self.max_value(state.transfer(action), depth + 1))
+            v = min(v, self.MAX(state.transfer(action), depth + 1))
             self.nodes += 1
 
         return v
-
 
     def minimax_decision(self):
         final_action = None
@@ -48,7 +47,7 @@ class MinimaxAgent:
             if new_state.isgoalstate():
                 final_action = action
                 break
-            minresult = self.min_value(new_state, 1)
+            minresult = self.MIN(new_state, 1)
             if minresult > v:
                 final_action = action
                 v = minresult

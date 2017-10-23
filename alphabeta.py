@@ -2,7 +2,7 @@ from board import *
 
 
 
-class AlphaBetaAgent:
+class alphabeta:
     def __init__(self, boardmatrix, turn, depth, function, type=0):
         self.boardmatrix = boardmatrix
         self.turn = turn
@@ -13,7 +13,7 @@ class AlphaBetaAgent:
         self.nodes = 0
         self.piece_num = 0
 
-    def max_value(self, state, alpha, beta, depth):
+    def MAX(self, state, alpha, beta, depth):
         if depth == self.maxdepth or state.isgoalstate() != 0:
             return state.utility(self.turn)
         v = MINNUM
@@ -27,13 +27,13 @@ class AlphaBetaAgent:
         for action in actions:
             self.nodes += 1
 
-            v = max(v, self.min_value(state.transfer(action), alpha, beta, depth + 1))
+            v = max(v, self.MIN(state.transfer(action), alpha, beta, depth + 1))
             if v >= beta:
                 return v
             alpha = max(alpha, v)
         return v
 
-    def min_value(self, state, alpha, beta, depth):
+    def MIN(self, state, alpha, beta, depth):
         if depth == self.maxdepth or state.isgoalstate() != 0:
             return state.utility(self.turn)
         v = MAXNUM
@@ -42,12 +42,11 @@ class AlphaBetaAgent:
         #if self.turn == 1:
         actions = sorted(state.available_actions(), key=lambda action: self.orderaction(action, state))
         #else:
-        #    actions = sorted(state.available_actions(), key=lambda action: self.orderaction(action, state), reverse=True)
 
         for action in actions:
             self.nodes += 1
 
-            v = min(v, self.max_value(state.transfer(action), alpha, beta, depth + 1))
+            v = min(v, self.MAX(state.transfer(action), alpha, beta, depth + 1))
             if v <= alpha:
                 return v
             beta = min(beta, v)
@@ -67,7 +66,7 @@ class AlphaBetaAgent:
             if new_state.isgoalstate():
                 final_action = action
                 break
-            minresult = self.min_value(new_state, MINNUM, MAXNUM, 1)
+            minresult = self.MIN(new_state, MINNUM, MAXNUM, 1)
             if minresult > v:
                 final_action = action
                 v = minresult

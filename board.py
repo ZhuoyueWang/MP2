@@ -1,5 +1,4 @@
 import sys
-import copy
 import random
 
 
@@ -133,7 +132,7 @@ class State:
         return matrix
 
 
-    def isgoalstate(self, type=0):
+    def isgoalstate(self):
         if 0 in [item[0] for item in self.white_positions] or len(self.black_positions) == 0:
             return 2
         if self.height - 1 in [item[0] for item in self.black_positions] or len(self.white_positions) == 0:
@@ -154,27 +153,26 @@ class State:
         elif turn == 2:
             return len(self.black_positions)
 
-    def offensive_function(self, turn):
+    def offensive(self, turn):
         return 6*(30-self.enemyscore(turn)) +random.random()
 
-    def defensive_function(self, turn):
+    def defensive(self, turn):
         return 6*self.myscore(turn) + random.random()
 
-    def offensive_function2(self, turn):
+    def offensive2(self, turn):
         return 6*self.myscore(turn) - 2*self.enemyscore(turn)
 
-    def defensive_function2(self, turn):
+    def defensive2(self, turn):
         return 2*self.myscore(turn) - 6*self.enemyscore(turn)
 
     def utility(self, turn):
-        #print(turn)
         if self.function == 0:
             return 0
         elif self.function == 1:
-            return self.offensive_function(turn)
+            return self.offensive(turn)
         elif self.function == 2:
-            return self.defensive_function(turn)
+            return self.defensive(turn)
         elif self.function == 3:
-            return self.offensive_function2(turn)
+            return self.offensive2(turn)
         elif self.function == 4:
-            return self.defensive_function2(turn)
+            return self.defensive2(turn)

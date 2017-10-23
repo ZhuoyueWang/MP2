@@ -6,9 +6,7 @@ import time
 import random
 import pygame
 
-exit = 0
-
-class BreakthroughGame:
+class game:
     def __init__(self):
         pygame.init()
         self.width, self.height = 560, 560
@@ -96,11 +94,7 @@ class BreakthroughGame:
             # Quit if close the windows
             if event.type == pygame.QUIT:
                 exit()
-            # reset button pressed
 
-
-            # ====================================================================================
-            # select chess
             elif self.status == 0:
                 x, y = event.pos
                 coor_y = math.floor(x / self.sizeofcell)
@@ -240,7 +234,7 @@ class BreakthroughGame:
             return self.ai_move_alphabeta(evaluation)
 
     def ai_move_minimax(self, function_type):
-        board, nodes, piece = MinimaxAgent(self.boardmatrix, self.turn, 3, function_type).minimax_decision()
+        board, nodes, piece = minimax(self.boardmatrix, self.turn, 3, function_type).minimax_decision()
         self.boardmatrix = board.getMatrix()
         if self.turn == 1:
             self.total_nodes_1 += nodes
@@ -254,7 +248,7 @@ class BreakthroughGame:
             #print(self.boardmatrix)
 
     def ai_move_alphabeta(self, function_type):
-        board, nodes, piece = AlphaBetaAgent(self.boardmatrix, self.turn, 5, function_type).alpha_beta_decision()
+        board, nodes, piece = alphabeta(self.boardmatrix, self.turn, 5, function_type).alpha_beta_decision()
         self.boardmatrix = board.getMatrix()
         if self.turn == 1:
             self.total_nodes_1 += nodes
@@ -266,20 +260,19 @@ class BreakthroughGame:
         if self.isgoalstate():
             self.status = 3
 
-    def isgoalstate(self, base=0):
-        if base == 0:
-            if 2 in self.boardmatrix[0] or 1 in self.boardmatrix[7]:
-                return True
-            else:
-                for line in self.boardmatrix:
-                    if 1 in line or 2 in line:
-                        return False
+    def isgoalstate(self):
+        if 2 in self.boardmatrix[0] or 1 in self.boardmatrix[7]:
             return True
+        else:
+            for line in self.boardmatrix:
+                if 1 in line or 2 in line:
+                    return False
+        return True
 
 def main():
-    game = BreakthroughGame()
-    while 1:
-        game.run()
+    Game = game()
+    while True:
+        Game.run()
 
 
 if __name__ == '__main__':
