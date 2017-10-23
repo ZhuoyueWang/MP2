@@ -132,6 +132,7 @@ class State:
         return matrix
 
 
+
     def isgoalstate(self):
         if 0 in [item[0] for item in self.white_positions] or len(self.black_positions) == 0:
             return 2

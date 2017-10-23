@@ -9,14 +9,13 @@ class alphabeta:
         self.maxdepth = depth
         self.function = function
         self.type = type
-
         self.nodes = 0
         self.piece_num = 0
 
     def MAX(self, state, alpha, beta, depth):
         if depth == self.maxdepth or state.isgoalstate() != 0:
             return state.utility(self.turn)
-        v = MINNUM
+        result = MINNUM
         actions = state.available_actions()
 
         #if self.turn == 1:
@@ -27,16 +26,16 @@ class alphabeta:
         for action in actions:
             self.nodes += 1
 
-            v = max(v, self.MIN(state.transfer(action), alpha, beta, depth + 1))
-            if v >= beta:
-                return v
-            alpha = max(alpha, v)
-        return v
+            result = max(result, self.MIN(state.transfer(action), alpha, beta, depth + 1))
+            if result >= beta:
+                return result
+            alpha = max(alpha, result)
+        return result
 
     def MIN(self, state, alpha, beta, depth):
         if depth == self.maxdepth or state.isgoalstate() != 0:
             return state.utility(self.turn)
-        v = MAXNUM
+        result = MAXNUM
         actions = state.available_actions()
 
         #if self.turn == 1:
@@ -46,11 +45,11 @@ class alphabeta:
         for action in actions:
             self.nodes += 1
 
-            v = min(v, self.MAX(state.transfer(action), alpha, beta, depth + 1))
-            if v <= alpha:
-                return v
-            beta = min(beta, v)
-        return v
+            result = min(result, self.MAX(state.transfer(action), alpha, beta, depth + 1))
+            if result <= alpha:
+                return result
+            beta = min(beta, result)
+        return result
 
     def alpha_beta_decision(self):
         final_action = None
@@ -58,7 +57,7 @@ class alphabeta:
             initialstate = State(boardmatrix=self.boardmatrix, turn=self.turn, function=self.function)
         else:
             initialstate = State(boardmatrix=self.boardmatrix, turn=self.turn, function=self.function, height=5, width=10)
-        v = MINNUM
+        result = MINNUM
         for action in initialstate.available_actions():
             self.nodes += 1
 
@@ -67,10 +66,10 @@ class alphabeta:
                 final_action = action
                 break
             minresult = self.MIN(new_state, MINNUM, MAXNUM, 1)
-            if minresult > v:
+            if minresult > result:
                 final_action = action
-                v = minresult
-        print(v)
+                result = minresult
+        print(result)
         if self.turn == 1:
             temp = initialstate.transfer(final_action)
             self.piece_num = temp.white_num

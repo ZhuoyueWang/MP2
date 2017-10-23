@@ -16,23 +16,23 @@ class minimax:
         if depth == self.maxdepth or state.isgoalstate() != 0:
             #print("utility", state.utility(self.turn))
             return state.utility(self.turn)
-        v = MINNUM
+        result= MINNUM
         for action in state.available_actions():
             # print(state.transfer(action).getMatrix())
-            v = max(v, self.MIN(state.transfer(action), depth + 1))
+            result= max(result, self.MIN(state.transfer(action), depth + 1))
             self.nodes += 1
-        return v
+        return result
 
     def MIN(self, state, depth):
         if depth == self.maxdepth or state.isgoalstate() != 0:
             #print("utility", state.utility(self.turn))
             return state.utility(self.turn)
-        v = MAXNUM
+        result= MAXNUM
         for action in state.available_actions():
-            v = min(v, self.MAX(state.transfer(action), depth + 1))
+            result= min(result, self.MAX(state.transfer(action), depth + 1))
             self.nodes += 1
 
-        return v
+        return result
 
     def minimax_decision(self):
         final_action = None
@@ -40,7 +40,7 @@ class minimax:
             initialstate = State(boardmatrix=self.boardmatrix, turn=self.turn, function=self.function)
         else:
             initialstate = State(boardmatrix=self.boardmatrix, turn=self.turn, function=self.function, height=5, width=10)
-        v = MINNUM
+        result= MINNUM
         for action in initialstate.available_actions():
             self.nodes += 1
             new_state = initialstate.transfer(action)
@@ -48,9 +48,9 @@ class minimax:
                 final_action = action
                 break
             minresult = self.MIN(new_state, 1)
-            if minresult > v:
+            if minresult > result:
                 final_action = action
-                v = minresult
+                result= minresult
         if self.turn == 1:
             temp = initialstate.transfer(final_action)
             self.piece_num = temp.white_num

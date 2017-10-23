@@ -13,7 +13,6 @@ class game:
         self.sizeofcell = int(560/8)
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.screen.fill([255, 255, 255])
-        # chessboard and workers
         self.board = 0
         self.blackchess = 0
         self.whitechess = 0
@@ -52,7 +51,6 @@ class game:
         # Caption
         pygame.display.set_caption("Breakthrough CS 440")
 
-        # initialize pygame clock
         self.clock = pygame.time.Clock()
         self.initgraphics()
 
@@ -89,7 +87,6 @@ class game:
                       'average time per move =', self.total_time_2 / self.total_step_2, '\n'
                       'number of captured workers =', self.eat_piece)
 
-        # Events accepting
         for event in pygame.event.get():
             # Quit if close the windows
             if event.type == pygame.QUIT:
