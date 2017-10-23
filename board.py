@@ -108,6 +108,7 @@ class State:
             else:
                 print("Invalid action!")
 
+
         state = State(black_position=black_pos, white_position=white_pos, black_num=self.black_num,
         white_num=self.white_num, turn=switchTurn(action.turn), function=self.function,
         height=self.height, width=self.width)
@@ -193,7 +194,7 @@ class State:
         return 6*self.myscore(turn) + random.random()
 
     def offensive_function2(self, turn):
-        return 6*self.myscore(turn) - self.enemyscore(turn)
+        return 6*self.myscore(turn) - 2*self.enemyscore(turn)
 
     def defensive_function2(self, turn):
-        return self.myscore(turn) - 6*self.enemyscore(turn)
+        return 2*self.myscore(turn) - 6*self.enemyscore(turn)

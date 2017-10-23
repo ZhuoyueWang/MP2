@@ -53,8 +53,10 @@ class MinimaxAgent:
                 final_action = action
                 v = minresult
         if self.turn == 1:
-            self.piece_num = initialstate.transfer(final_action).white_num
+            temp = initialstate.transfer(final_action)
+            self.piece_num = temp.white_num
         elif self.turn == 2:
-            self.piece_num = initialstate.transfer(final_action).black_num
+            temp = initialstate.transfer(final_action)
+            self.piece_num = temp.black_num
         print(final_action.getString())
         return initialstate.transfer(final_action), self.nodes, self.piece_num

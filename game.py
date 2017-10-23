@@ -6,10 +6,12 @@ import time
 import random
 import pygame
 
+exit = 0
+
 class BreakthroughGame:
     def __init__(self):
         pygame.init()
-        self.width, self.height = 700, 560
+        self.width, self.height = 560, 560
         self.sizeofcell = int(560/8)
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.screen.fill([255, 255, 255])
@@ -50,12 +52,11 @@ class BreakthroughGame:
         self.total_step_2 = 0
         self.eat_piece = 0
         # Caption
-        pygame.display.set_caption("Breakthrough!")
+        pygame.display.set_caption("Breakthrough CS 440")
 
         # initialize pygame clock
         self.clock = pygame.time.Clock()
         self.initgraphics()
-        self.flag = True
 
     def run(self):
         self.clock.tick(60)
@@ -69,24 +70,26 @@ class BreakthroughGame:
             # Black
             if self.turn == 1:
                 start = time.clock()
-                self.ai_move(2, 2)
+                self.ai_move(1, 1)
                 self.total_time_1 += (time.clock() - start)
                 self.total_step_1 += 1
-                print('total_step_1 = ', self.total_step_1,
-                      'total_nodes_1 = ', self.total_nodes_1,
-                      'node_per_move_1 = ', self.total_nodes_1 / self.total_step_1,
-                      'time_per_move_1 = ', self.total_time_1 / self.total_step_1,
-                      'have_eaten = ', self.eat_piece)
+                print( 'Black: \n'
+                    'total steps = ', self.total_step_1, '\n'
+                      'total expaned nodes = ', self.total_nodes_1, '\n'
+                      'average expaned nodes per move = ', self.total_nodes_1 / self.total_step_1, '\n'
+                      'average time per move = ', self.total_time_1 / self.total_step_1, '\n'
+                      'number of captured workers = ', self.eat_piece)
             elif self.turn == 2:
                 start = time.clock()
-                self.ai_move(2, 2)
+                self.ai_move(1, 2)
                 self.total_time_2 += (time.clock() - start)
                 self.total_step_2 += 1
-                print('total_step_2 = ', self.total_step_2,
-                      'total_nodes_2 = ', self.total_nodes_2,
-                      'node_per_move_2 = ', self.total_nodes_2 / self.total_step_2,
-                      'time_per_move_2 = ', self.total_time_2 / self.total_step_2,
-                      'have_eaten: ', self.eat_piece)
+                print( 'White: \n'
+                    'total steps = ', self.total_step_2, '\n'
+                      'total expaned nodes = ', self.total_nodes_2, '\n'
+                      'average expaned nodes per move = ', self.total_nodes_2 / self.total_step_2, '\n'
+                      'average time per move = ', self.total_time_2 / self.total_step_2, '\n'
+                      'number of captured workers = ', self.eat_piece)
 
         # Events accepting
         for event in pygame.event.get():
@@ -184,13 +187,22 @@ class BreakthroughGame:
                     self.screen.blit(self.outline,
                                      (self.sizeofcell * y3, self.sizeofcell * x3))
         if self.status == 3:
-            if flag == True:
-                if self.turn == 1:
-                    print("Black Win!")
-                    flag = False
-                else:
-                    print("White Win!")
-                    flag = False
+            if self.turn == 1:
+                print("Black Win!")
+                print( 'Black: \n'
+                    'total steps = ', self.total_step_1, '\n'
+                      'total expaned nodes = ', self.total_nodes_1, '\n'
+                      'average expaned nodes per move = ', self.total_nodes_1 / self.total_step_1, '\n'
+                      'average time per move = ', self.total_time_1 / self.total_step_1, '\n'
+                      'number of captured workers = ', self.eat_piece)
+            else:
+                print("White Win!")
+                print( 'White: \n'
+                    'total steps = ', self.total_step_2, '\n'
+                      'total expaned nodes = ', self.total_nodes_2, '\n'
+                      'average expaned nodes per move = ', self.total_nodes_2 / self.total_step_2, '\n'
+                      'average time per move = ', self.total_time_2 / self.total_step_2, '\n'
+                      'number of captured workers = ', self.eat_piece)
 
     def movechess(self):
         self.boardmatrix[self.new_x][self.new_y] = self.boardmatrix[self.ori_x][self.ori_y]
