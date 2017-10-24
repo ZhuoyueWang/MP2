@@ -1,8 +1,8 @@
 from board import *
 
 class minimax:
-    def __init__(self, boardmatrix, turn, depth, function, type=0):
-        self.boardmatrix = boardmatrix
+    def __init__(self, matrix, turn, depth, function, type=0):
+        self.matrix = matrix
         self.turn = turn
         self.maxdepth = depth
         self.function = function
@@ -16,7 +16,7 @@ class minimax:
             return state.choice(self.turn)
         result= -float("inf")
         for action in state.available_actions():
-            # print(state.transfer(action).getboardmatrix())
+            # print(state.transfer(action).getmatrix())
             result= max(result, self.MIN(state.transfer(action), depth + 1))
             self.nodes += 1
         return result
@@ -29,15 +29,14 @@ class minimax:
         for action in state.available_actions():
             result= min(result, self.MAX(state.transfer(action), depth + 1))
             self.nodes += 1
-
         return result
 
     def minimax(self):
         final_action = None
         if self.type == 0:
-            initialstate = State(boardmatrix=self.boardmatrix, turn=self.turn, function=self.function)
+            initialstate = State(matrix=self.matrix, turn=self.turn, function=self.function)
         else:
-            initialstate = State(boardmatrix=self.boardmatrix, turn=self.turn, function=self.function, height=5, width=10)
+            initialstate = State(matrix=self.matrix, turn=self.turn, function=self.function, height=5, width=10)
         result= -float("inf")
         for action in initialstate.available_actions():
             self.nodes += 1
@@ -55,5 +54,4 @@ class minimax:
         elif self.turn == 2:
             temp = initialstate.transfer(final_action)
             self.piece_num = temp.black_num
-        print(final_action.getString())
         return initialstate.transfer(final_action), self.nodes, self.piece_num

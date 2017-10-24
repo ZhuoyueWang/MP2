@@ -36,7 +36,7 @@ class Action:
         return self.coordinate[0]
 
 class State:
-    def __init__(self, boardmatrix=None, black_position=None, white_position=None, black_num=0,
+    def __init__(self, matrix=None, black_position=None, white_position=None, black_num=0,
          white_num=0, turn=1, function=0, width=8, height=8):
         self.width = width
         self.height = height
@@ -52,13 +52,13 @@ class State:
         self.white_num = white_num
         self.turn = turn
         self.function = function
-        if boardmatrix is not None:
+        if matrix is not None:
             for i in range(self.height):
                 for j in range(self.width):
-                    if boardmatrix[i][j] == 1:
+                    if matrix[i][j] == 1:
                         self.black_positions.append((i, j))
                         self.black_num += 1
-                    if boardmatrix[i][j] == 2:
+                    if matrix[i][j] == 2:
                         self.white_positions.append((i, j))
                         self.white_num += 1
 
@@ -74,8 +74,6 @@ class State:
                 black_pos[index] = new_pos
                 if new_pos in self.white_positions:
                     white_pos.remove(new_pos)
-            else:
-                print("Invalid action!")
         # white turn
         elif action.turn == 2:
             if action.coordinate in self.white_positions:
@@ -84,8 +82,6 @@ class State:
                 white_pos[index] = new_pos
                 if new_pos in self.black_positions:
                     black_pos.remove(new_pos)
-            else:
-                print("Invalid action!")
 
         state = State(black_position=black_pos, white_position=white_pos, black_num=self.black_num,
         white_num=self.white_num, turn=switchTurn(action.turn), function=self.function,
@@ -96,17 +92,14 @@ class State:
         available_actions = []
         if self.turn == 1:
             for pos in sorted(self.black_positions, key=lambda p: (p[0], -p[1]), reverse=True):
-                # ======Caution!======
                 if pos[0] != self.height - 1 and pos[1] != 0 and (pos[0] + 1, pos[1] - 1) not in self.black_positions:
                     available_actions.append(Action(pos, 1, 1))
                 if pos[0] != self.height - 1 and (pos[0] + 1, pos[1]) not in self.black_positions and (pos[0] + 1, pos[1]) not in self.white_positions:
                     available_actions.append(Action(pos, 2, 1))
                 if pos[0] != self.height - 1 and pos[1] != self.width - 1 and (pos[0] + 1, pos[1] + 1) not in self.black_positions:
                     available_actions.append(Action(pos, 3, 1))
-
         elif self.turn == 2:
             for pos in sorted(self.white_positions, key=lambda p: (p[0], p[1])):
-            # ======Caution!======
                 if pos[0] != 0 and pos[1] != 0 and (pos[0] - 1, pos[1] - 1) not in self.white_positions:
                     available_actions.append(Action(pos, 1, 2))
                 if pos[0] != 0 and (pos[0] - 1, pos[1]) not in self.black_positions and (pos[0] - 1, pos[1]) not in self.white_positions:
@@ -115,15 +108,13 @@ class State:
                     available_actions.append(Action(pos, 3, 2))
         return available_actions
 
-    def getboardmatrix(self):
-        boardmatrix = [[0 for i in range(self.width)] for i in range(self.height)]
+    def getmatrix(self):
+        matrix = [[0 for i in range(self.width)] for i in range(self.height)]
         for item in self.black_positions:
-            boardmatrix[item[0]][item[1]] = 1
+            matrix[item[0]][item[1]] = 1
         for item in self.white_positions:
-            boardmatrix[item[0]][item[1]] = 2
-        return boardmatrix
-
-
+            matrix[item[0]][item[1]] = 2
+        return matrix
 
     def isgoalstate(self):
         if 0 in [item[0] for item in self.white_positions] or len(self.black_positions) == 0:
@@ -135,14 +126,12 @@ class State:
     def myscore(self, turn):
         if turn == 1:
             return len(self.black_positions)
-
         elif turn == 2:
             return len(self.white_positions)
 
     def enemyscore(self, turn):
         if turn == 1:
             return len(self.white_positions)
-
         elif turn == 2:
             return len(self.black_positions)
 

@@ -20,7 +20,6 @@ class game:
         self.reset = 0
         self.winner = 0
         self.computer = None
-
         # status 0: origin;  1: ready to move; 2: end
         # turn 1: black 2: white
         self.status = 0
@@ -30,9 +29,8 @@ class game:
         self.ori_y = 0
         self.new_x = 0
         self.new_y = 0
-
         # matrix for position of chess, 0 - empty, 1 - black, 2 - white
-        self.boardmatrix = [[1, 1, 1, 1, 1, 1, 1, 1],
+        self.matrix = [[1, 1, 1, 1, 1, 1, 1, 1],
                             [1, 1, 1, 1, 1, 1, 1, 1],
                             [0, 0, 0, 0, 0, 0, 0, 0],
                             [0, 0, 0, 0, 0, 0, 0, 0],
@@ -48,9 +46,6 @@ class game:
         self.total_step_1 = 0
         self.total_step_2 = 0
         self.eat_piece = 0
-        # Caption
-        pygame.display.set_caption("Breakthrough CS 440")
-
         self.clock = pygame.time.Clock()
         self.initgraphics()
 
@@ -66,7 +61,7 @@ class game:
             # Black
             if self.turn == 1:
                 start = time.clock()
-                self.ai_move(2, 1)
+                self.move(1, 1)
                 self.total_time_1 += (time.clock() - start)
                 self.total_step_1 += 1
                 print( 'Black: \n'
@@ -77,7 +72,7 @@ class game:
                       'number of captured workers =', self.eat_piece)
             elif self.turn == 2:
                 start = time.clock()
-                self.ai_move(2, 2)
+                self.move(1, 2)
                 self.total_time_2 += (time.clock() - start)
                 self.total_step_2 += 1
                 print( 'White: \n'
@@ -96,7 +91,7 @@ class game:
                 x, y = event.pos
                 coor_y = math.floor(x / self.sizeofcell)
                 coor_x = math.floor(y / self.sizeofcell)
-                if self.boardmatrix[coor_x][coor_y] == self.turn:
+                if self.matrix[coor_x][coor_y] == self.turn:
                     self.status = 1
                     self.ori_y = math.floor(x / self.sizeofcell)
                     self.ori_x = math.floor(y / self.sizeofcell)
@@ -107,10 +102,10 @@ class game:
                 self.new_x = math.floor(y / self.sizeofcell)
                 if self.isabletomove():
                     self.movechess()
-                    if (self.new_x == 7 and self.boardmatrix[self.new_x][self.new_y] == 1) \
-                        or (self.new_x == 0 and self.boardmatrix[self.new_x][self.new_y] == 2):
+                    if (self.new_x == 7 and self.matrix[self.new_x][self.new_y] == 1) \
+                        or (self.new_x == 0 and self.matrix[self.new_x][self.new_y] == 2):
                         self.status = 3
-                elif self.boardmatrix[self.new_x][self.new_y] == self.boardmatrix[self.ori_x][self.ori_y]:
+                elif self.matrix[self.new_x][self.new_y] == self.matrix[self.ori_x][self.ori_y]:
                     self.ori_x = self.new_x
                     self.ori_y = self.new_y
                     # display the board and chess
@@ -132,13 +127,13 @@ class game:
         self.screen.blit(self.board, (0, 0))
         for i in range(8):
             for j in range(8):
-                if self.boardmatrix[i][j] == 1:
+                if self.matrix[i][j] == 1:
                     self.screen.blit(self.blackchess, (self.sizeofcell * j + 10, self.sizeofcell * i + 10))
-                elif self.boardmatrix[i][j] == 2:
+                elif self.matrix[i][j] == 2:
                     self.screen.blit(self.whitechess, (self.sizeofcell * j + 10, self.sizeofcell * i + 10))
         if self.status == 1:
             # only downward is acceptable
-            if self.boardmatrix[self.ori_x][self.ori_y] == 1:
+            if self.matrix[self.ori_x][self.ori_y] == 1:
                 x1 = self.ori_x + 1
                 y1 = self.ori_y - 1
                 x2 = self.ori_x + 1
@@ -146,35 +141,32 @@ class game:
                 x3 = self.ori_x + 1
                 y3 = self.ori_y
                 # left down
-                if y1 >= 0 and self.boardmatrix[x1][y1] != 1:
+                if y1 >= 0 and self.matrix[x1][y1] != 1:
                     self.screen.blit(self.outline,
                                      (self.sizeofcell * y1, self.sizeofcell * x1))
                 # right down
-                if y2 <= 7 and self.boardmatrix[x2][y2] != 1:
+                if y2 <= 7 and self.matrix[x2][y2] != 1:
                     self.screen.blit(self.outline,
                                      (self.sizeofcell * y2, self.sizeofcell * x2))
                 # down
-                if x3 <= 7 and self.boardmatrix[x3][y3] == 0:
+                if x3 <= 7 and self.matrix[x3][y3] == 0:
                     self.screen.blit(self.outline,
                                      (self.sizeofcell * y3, self.sizeofcell * x3))
 
-            if self.boardmatrix[self.ori_x][self.ori_y] == 2:
+            if self.matrix[self.ori_x][self.ori_y] == 2:
                 x1 = self.ori_x - 1
                 y1 = self.ori_y - 1
                 x2 = self.ori_x - 1
                 y2 = self.ori_y + 1
                 x3 = self.ori_x - 1
                 y3 = self.ori_y
-                # left up
-                if y1 >= 0 and self.boardmatrix[x1][y1] != 2:
+                if y1 >= 0 and self.matrix[x1][y1] != 2:
                     self.screen.blit(self.outline,
                                      (self.sizeofcell * y1, self.sizeofcell * x1))
-                # right up
-                if y2 <= 7 and self.boardmatrix[x2][y2] != 2:
+                if y2 <= 7 and self.matrix[x2][y2] != 2:
                     self.screen.blit(self.outline,
                                      (self.sizeofcell * y2, self.sizeofcell * x2))
-                # up
-                if x3 >= 0 and self.boardmatrix[x3][y3] == 0:
+                if x3 >= 0 and self.matrix[x3][y3] == 0:
                     self.screen.blit(self.outline,
                                      (self.sizeofcell * y3, self.sizeofcell * x3))
         if self.status == 3:
@@ -201,8 +193,8 @@ class game:
 
 
     def movechess(self):
-        self.boardmatrix[self.new_x][self.new_y] = self.boardmatrix[self.ori_x][self.ori_y]
-        self.boardmatrix[self.ori_x][self.ori_y] = 0
+        self.matrix[self.new_x][self.new_y] = self.matrix[self.ori_x][self.ori_y]
+        self.matrix[self.ori_x][self.ori_y] = 0
         if self.turn == 1:
             self.turn = 2
         elif self.turn == 2:
@@ -211,31 +203,34 @@ class game:
 
 
     def isabletomove(self):
-        if (self.boardmatrix[self.ori_x][self.ori_y] == 1
-            and self.boardmatrix[self.new_x][self.new_y] != 1
+        if (self.matrix[self.ori_x][self.ori_y] == 1
+            and self.matrix[self.new_x][self.new_y] != 1
             and self.new_x - self.ori_x == 1
             and self.ori_y - 1 <= self.new_y <= self.ori_y + 1
-            and not (self.ori_y == self.new_y and self.boardmatrix[self.new_x][self.new_y] == 2)) \
-            or (self.boardmatrix[self.ori_x][self.ori_y] == 2
-                and self.boardmatrix[self.new_x][self.new_y] != 2
+            and not (self.ori_y == self.new_y and self.matrix[self.new_x][self.new_y] == 2)) \
+            or (self.matrix[self.ori_x][self.ori_y] == 2
+                and self.matrix[self.new_x][self.new_y] != 2
                 and self.ori_x - self.new_x == 1
                 and self.ori_y - 1 <= self.new_y <= self.ori_y + 1
-                and not (self.ori_y == self.new_y and self.boardmatrix[self.new_x][self.new_y] == 1)):
+                and not (self.ori_y == self.new_y and self.matrix[self.new_x][self.new_y] == 1)):
             return 1
         return 0
 
-    def ai_move(self, searchtype, evaluation):
+    def move(self, searchtype, evaluation):
         if searchtype == 1:
-            return self.ai_move_minimax(evaluation)
+            return self.move_minimax(evaluation)
         elif searchtype == 2:
-            return self.ai_move_alphabeta(evaluation)
+            return self.move_alphabeta(evaluation)
 
-    def ai_move_minimax(self, function_type):
-        board, nodes, piece = minimax(self.boardmatrix, self.turn, 3, function_type).minimax()
-        self.move(board,nodes,piece)
+    def move_minimax(self, function_type):
+        board, nodes, piece = minimax(self.matrix, self.turn, 3, function_type).minimax()
+        self.moveNode(board,nodes,piece)
+    def move_alphabeta(self, function_type):
+        board, nodes, piece = alphabeta(self.matrix, self.turn, 5, function_type).alphabet()
+        self.moveNode(board,nodes,piece)
 
-    def move(self,board,nodes,piece):
-        self.boardmatrix = board.getboardmatrix()
+    def moveNode(self,board,nodes,piece):
+        self.matrix = board.getmatrix()
         if self.turn == 1:
             self.total_nodes_1 += nodes
             self.turn = 2
@@ -245,18 +240,12 @@ class game:
         self.eat_piece = 16 - piece
         if self.isgoalstate():
             self.status = 3
-            #print(self.boardmatrix)
-
-    def ai_move_alphabeta(self, function_type):
-        board, nodes, piece = alphabeta(self.boardmatrix, self.turn, 5, function_type).alphabet()
-        self.move(board,nodes,piece)
-
 
     def isgoalstate(self):
-        if 2 in self.boardmatrix[0] or 1 in self.boardmatrix[7]:
+        if 2 in self.matrix[0] or 1 in self.matrix[7]:
             return True
         else:
-            for line in self.boardmatrix:
+            for line in self.matrix:
                 if 1 in line or 2 in line:
                     return False
         return True
