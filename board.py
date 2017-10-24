@@ -115,13 +115,13 @@ class State:
                     available_actions.append(Action(pos, 3, 2))
         return available_actions
 
-    def getMatrix(self):
-        matrix = [[0 for i in range(self.width)] for i in range(self.height)]
+    def getboardmatrix(self):
+        boardmatrix = [[0 for i in range(self.width)] for i in range(self.height)]
         for item in self.black_positions:
-            matrix[item[0]][item[1]] = 1
+            boardmatrix[item[0]][item[1]] = 1
         for item in self.white_positions:
-            matrix[item[0]][item[1]] = 2
-        return matrix
+            boardmatrix[item[0]][item[1]] = 2
+        return boardmatrix
 
 
 

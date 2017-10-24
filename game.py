@@ -66,7 +66,7 @@ class game:
             # Black
             if self.turn == 1:
                 start = time.clock()
-                self.ai_move(1, 1)
+                self.ai_move(2, 1)
                 self.total_time_1 += (time.clock() - start)
                 self.total_step_1 += 1
                 print( 'Black: \n'
@@ -77,7 +77,7 @@ class game:
                       'number of captured workers =', self.eat_piece)
             elif self.turn == 2:
                 start = time.clock()
-                self.ai_move(1, 2)
+                self.ai_move(2, 2)
                 self.total_time_2 += (time.clock() - start)
                 self.total_step_2 += 1
                 print( 'White: \n'
@@ -231,8 +231,11 @@ class game:
             return self.ai_move_alphabeta(evaluation)
 
     def ai_move_minimax(self, function_type):
-        board, nodes, piece = minimax(self.boardmatrix, self.turn, 3, function_type).minimax_decision()
-        self.boardmatrix = board.getMatrix()
+        board, nodes, piece = minimax(self.boardmatrix, self.turn, 3, function_type).minimax()
+        self.move(board,nodes,piece)
+
+    def move(self,board,nodes,piece):
+        self.boardmatrix = board.getboardmatrix()
         if self.turn == 1:
             self.total_nodes_1 += nodes
             self.turn = 2
@@ -245,17 +248,9 @@ class game:
             #print(self.boardmatrix)
 
     def ai_move_alphabeta(self, function_type):
-        board, nodes, piece = alphabeta(self.boardmatrix, self.turn, 5, function_type).alpha_beta_decision()
-        self.boardmatrix = board.getMatrix()
-        if self.turn == 1:
-            self.total_nodes_1 += nodes
-            self.turn = 2
-        elif self.turn == 2:
-            self.total_nodes_2 += nodes
-            self.turn = 1
-        self.eat_piece = 16 - piece
-        if self.isgoalstate():
-            self.status = 3
+        board, nodes, piece = alphabeta(self.boardmatrix, self.turn, 5, function_type).alphabet()
+        self.move(board,nodes,piece)
+
 
     def isgoalstate(self):
         if 2 in self.boardmatrix[0] or 1 in self.boardmatrix[7]:

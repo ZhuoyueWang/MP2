@@ -16,7 +16,7 @@ class minimax:
             return state.choice(self.turn)
         result= -float("inf")
         for action in state.available_actions():
-            # print(state.transfer(action).getMatrix())
+            # print(state.transfer(action).getboardmatrix())
             result= max(result, self.MIN(state.transfer(action), depth + 1))
             self.nodes += 1
         return result
@@ -32,7 +32,7 @@ class minimax:
 
         return result
 
-    def minimax_decision(self):
+    def minimax(self):
         final_action = None
         if self.type == 0:
             initialstate = State(boardmatrix=self.boardmatrix, turn=self.turn, function=self.function)

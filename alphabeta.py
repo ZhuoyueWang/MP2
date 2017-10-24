@@ -1,7 +1,5 @@
 from board import *
 
-
-
 class alphabeta:
     def __init__(self, boardmatrix, turn, depth, function, type=0):
         self.boardmatrix = boardmatrix
@@ -41,7 +39,7 @@ class alphabeta:
             beta = min(beta, result)
         return result
 
-    def alpha_beta_decision(self):
+    def alphabet(self):
         final_action = None
         if self.type == 0:
             initialstate = State(boardmatrix=self.boardmatrix, turn=self.turn, function=self.function)
