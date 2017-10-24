@@ -1,7 +1,8 @@
 from minimax import *
 from board import *
 from alphabeta import *
-import sys, os, math
+import sys
+import math
 import time
 import random
 import pygame
@@ -48,6 +49,14 @@ class game:
         self.eat_piece = 0
         self.clock = pygame.time.Clock()
         self.initgraphics()
+
+    def initgraphics(self):
+        self.board = pygame.image.load_extended('board.png')
+        self.board = pygame.transform.scale(self.board, (560, 560))
+        self.blackchess = pygame.image.load_extended('black.png')
+        self.blackchess = pygame.transform.scale(self.blackchess, (self.sizeofcell- 20, self.sizeofcell - 20))
+        self.whitechess = pygame.image.load_extended('white.png')
+        self.whitechess = pygame.transform.scale(self.whitechess, (self.sizeofcell - 20, self.sizeofcell - 20))
 
     def run(self):
         self.clock.tick(60)
@@ -108,19 +117,9 @@ class game:
                 elif self.matrix[self.new_x][self.new_y] == self.matrix[self.ori_x][self.ori_y]:
                     self.ori_x = self.new_x
                     self.ori_y = self.new_y
-                    # display the board and chess
         self.display()
-        # update the screen
         pygame.display.flip()
 
-    # load the graphics and rescale them
-    def initgraphics(self):
-        self.board = pygame.image.load_extended('board.png')
-        self.board = pygame.transform.scale(self.board, (560, 560))
-        self.blackchess = pygame.image.load_extended('black.png')
-        self.blackchess = pygame.transform.scale(self.blackchess, (self.sizeofcell- 20, self.sizeofcell - 20))
-        self.whitechess = pygame.image.load_extended('white.png')
-        self.whitechess = pygame.transform.scale(self.whitechess, (self.sizeofcell - 20, self.sizeofcell - 20))
 
     # display the graphics in the window
     def display(self):

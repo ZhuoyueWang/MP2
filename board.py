@@ -1,39 +1,11 @@
-import sys
 import random
-
-# direction: 1 -> left, 2 -> middle, 3 -> right
-
-def singleMove(initial_pos, direction, turn):
-    if turn == 1:
-        if direction == 1:
-            return initial_pos[0] + 1, initial_pos[1] - 1
-        elif direction == 2:
-            return initial_pos[0] + 1, initial_pos[1]
-        elif direction == 3:
-            return initial_pos[0] + 1, initial_pos[1] + 1
-    elif turn == 2:
-        if direction == 1:
-            return initial_pos[0] - 1, initial_pos[1] - 1
-        elif direction == 2:
-            return initial_pos[0] - 1, initial_pos[1]
-        elif direction == 3:
-            return initial_pos[0] - 1, initial_pos[1] + 1
-
-def switchTurn(turn):
-    if turn == 1:
-        return 2
-    if turn == 2:
-        return 1
 
 class Action:
     def __init__(self, coordinate, direction, turn):
         self.coordinate = coordinate
         self.direction = direction
         self.turn = turn
-    def getString(self):
-        return self.coordinate, self.direction, self.turn
-    def getCoordinate_x(self):
-        return self.coordinate[0]
+
 
 class State:
     def __init__(self, matrix=None, black_position=None, white_position=None, black_num=0,
@@ -70,7 +42,7 @@ class State:
         if action.turn == 1:
             if action.coordinate in self.black_positions:
                 index = black_pos.index(action.coordinate)
-                new_pos = singleMove(action.coordinate, action.direction, action.turn)
+                new_pos = self.singleMove(action.coordinate, action.direction, action.turn)
                 black_pos[index] = new_pos
                 if new_pos in self.white_positions:
                     white_pos.remove(new_pos)
@@ -78,15 +50,37 @@ class State:
         elif action.turn == 2:
             if action.coordinate in self.white_positions:
                 index = white_pos.index(action.coordinate)
-                new_pos = singleMove(action.coordinate, action.direction, action.turn)
+                new_pos = self.singleMove(action.coordinate, action.direction, action.turn)
                 white_pos[index] = new_pos
                 if new_pos in self.black_positions:
                     black_pos.remove(new_pos)
 
         state = State(black_position=black_pos, white_position=white_pos, black_num=self.black_num,
-        white_num=self.white_num, turn=switchTurn(action.turn), function=self.function,
+        white_num=self.white_num, turn=self.switchTurn(action.turn), function=self.function,
         height=self.height, width=self.width)
         return state
+
+    def switchTurn(self,turn):
+        if turn == 1:
+            return 2
+        if turn == 2:
+            return 1
+
+    def singleMove(self,initial_pos, direction, turn):
+        if turn == 1:
+            if direction == 1:
+                return initial_pos[0] + 1, initial_pos[1] - 1
+            elif direction == 2:
+                return initial_pos[0] + 1, initial_pos[1]
+            elif direction == 3:
+                return initial_pos[0] + 1, initial_pos[1] + 1
+        elif turn == 2:
+            if direction == 1:
+                return initial_pos[0] - 1, initial_pos[1] - 1
+            elif direction == 2:
+                return initial_pos[0] - 1, initial_pos[1]
+            elif direction == 3:
+                return initial_pos[0] - 1, initial_pos[1] + 1
 
     def available_actions(self):
         available_actions = []
