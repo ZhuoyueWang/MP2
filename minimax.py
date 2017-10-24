@@ -1,6 +1,4 @@
-import numpy as np
 from board import *
-
 
 class minimax:
     def __init__(self, boardmatrix, turn, depth, function, type=0):
@@ -14,9 +12,9 @@ class minimax:
 
     def MAX(self, state, depth):
         if depth == self.maxdepth or state.isgoalstate() != 0:
-            #print("utility", state.utility(self.turn))
-            return state.utility(self.turn)
-        result= MINNUM
+            #print("choice", state.choice(self.turn))
+            return state.choice(self.turn)
+        result= -float("inf")
         for action in state.available_actions():
             # print(state.transfer(action).getMatrix())
             result= max(result, self.MIN(state.transfer(action), depth + 1))
@@ -25,9 +23,9 @@ class minimax:
 
     def MIN(self, state, depth):
         if depth == self.maxdepth or state.isgoalstate() != 0:
-            #print("utility", state.utility(self.turn))
-            return state.utility(self.turn)
-        result= MAXNUM
+            #print("choice", state.choice(self.turn))
+            return state.choice(self.turn)
+        result= float("inf")
         for action in state.available_actions():
             result= min(result, self.MAX(state.transfer(action), depth + 1))
             self.nodes += 1
@@ -40,7 +38,7 @@ class minimax:
             initialstate = State(boardmatrix=self.boardmatrix, turn=self.turn, function=self.function)
         else:
             initialstate = State(boardmatrix=self.boardmatrix, turn=self.turn, function=self.function, height=5, width=10)
-        result= MINNUM
+        result= -float("inf")
         for action in initialstate.available_actions():
             self.nodes += 1
             new_state = initialstate.transfer(action)

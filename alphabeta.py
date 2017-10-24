@@ -14,18 +14,12 @@ class alphabeta:
 
     def MAX(self, state, alpha, beta, depth):
         if depth == self.maxdepth or state.isgoalstate() != 0:
-            return state.utility(self.turn)
-        result = MINNUM
+            return state.choice(self.turn)
+        result = -float("inf")
         actions = state.available_actions()
-
-        #if self.turn == 1:
         actions = sorted(state.available_actions(), key=lambda action: self.orderaction(action, state), reverse=True)
-        #else:
-        #    actions = sorted(state.available_actions(), key=lambda action: self.orderaction(action, state))
-
         for action in actions:
             self.nodes += 1
-
             result = max(result, self.MIN(state.transfer(action), alpha, beta, depth + 1))
             if result >= beta:
                 return result
@@ -34,14 +28,10 @@ class alphabeta:
 
     def MIN(self, state, alpha, beta, depth):
         if depth == self.maxdepth or state.isgoalstate() != 0:
-            return state.utility(self.turn)
-        result = MAXNUM
+            return state.choice(self.turn)
+        result = float("inf")
         actions = state.available_actions()
-
-        #if self.turn == 1:
         actions = sorted(state.available_actions(), key=lambda action: self.orderaction(action, state))
-        #else:
-
         for action in actions:
             self.nodes += 1
 
@@ -57,15 +47,14 @@ class alphabeta:
             initialstate = State(boardmatrix=self.boardmatrix, turn=self.turn, function=self.function)
         else:
             initialstate = State(boardmatrix=self.boardmatrix, turn=self.turn, function=self.function, height=5, width=10)
-        result = MINNUM
+        result = -float("inf")
         for action in initialstate.available_actions():
             self.nodes += 1
-
             new_state = initialstate.transfer(action)
             if new_state.isgoalstate():
                 final_action = action
                 break
-            minresult = self.MIN(new_state, MINNUM, MAXNUM, 1)
+            minresult = self.MIN(new_state, -float("inf"), float("inf"), 1)
             if minresult > result:
                 final_action = action
                 result = minresult

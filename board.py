@@ -1,15 +1,7 @@
 import sys
 import random
 
-
 # direction: 1 -> left, 2 -> middle, 3 -> right
-
-
-MAXNUM = float("inf")
-MINNUM = -float("inf")
-MAXTUPLE = (MAXNUM, MAXNUM)
-MINTUPLE = (MINNUM, MINNUM)
-
 
 def singleMove(initial_pos, direction, turn):
     if turn == 1:
@@ -166,7 +158,7 @@ class State:
     def defensive2(self, turn):
         return 2*self.myscore(turn) - 6*self.enemyscore(turn)
 
-    def utility(self, turn):
+    def choice(self, turn):
         if self.function == 0:
             return 0
         elif self.function == 1:
