@@ -1,6 +1,5 @@
-from minimax import *
+from search import *
 from board import *
-from alphabeta import *
 import sys
 import math
 import time
@@ -64,8 +63,6 @@ class game:
         # clear the screen
         self.screen.fill([255, 255, 255])
         self.status = 5
-
-
         if self.status == 5:
             # Black
             if self.turn == 1:
@@ -81,7 +78,7 @@ class game:
                       'number of captured workers =', self.eat_piece)
             elif self.turn == 2:
                 start = time.clock()
-                self.move(1, 2)
+                self.move(2, 2)
                 self.total_time_2 += (time.clock() - start)
                 self.total_step_2 += 1
                 print( 'White: \n'
@@ -190,7 +187,6 @@ class game:
             pygame.image.save(sub, "screenshot.jpg")
             sys.exit()
 
-
     def movechess(self):
         self.matrix[self.new_x][self.new_y] = self.matrix[self.ori_x][self.ori_y]
         self.matrix[self.ori_x][self.ori_y] = 0
@@ -199,7 +195,6 @@ class game:
         elif self.turn == 2:
             self.turn = 1
         self.status = 0
-
 
     def isabletomove(self):
         if (self.matrix[self.ori_x][self.ori_y] == 1
