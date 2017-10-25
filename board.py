@@ -136,10 +136,10 @@ class State:
         return 6*self.myscore(turn) + random.random()
 
     def offensive2(self, turn):
-        return 6*self.myscore(turn) - 2*self.enemyscore(turn)
+        return 2*self.myscore(turn) - 6*self.enemyscore(turn)
 
     def defensive2(self, turn):
-        return 2*self.myscore(turn) - 6*self.enemyscore(turn)
+        return 6*self.myscore(turn) - 2*self.enemyscore(turn)
 
     def choice(self, turn):
         if self.function == 0:

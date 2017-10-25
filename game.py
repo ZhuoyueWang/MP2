@@ -47,9 +47,9 @@ class game:
         self.total_step_2 = 0
         self.eat_piece = 0
         self.clock = pygame.time.Clock()
-        self.initgraphics()
+        self.graph()
 
-    def initgraphics(self):
+    def graph(self):
         self.board = pygame.image.load_extended('board.png')
         self.board = pygame.transform.scale(self.board, (560, 560))
         self.blackchess = pygame.image.load_extended('black.png')
@@ -59,7 +59,6 @@ class game:
 
     def run(self):
         self.clock.tick(60)
-
         # clear the screen
         self.screen.fill([255, 255, 255])
         self.status = 5
@@ -67,7 +66,7 @@ class game:
             # Black
             if self.turn == 1:
                 start = time.clock()
-                self.move(1, 1)
+                self.move(2, 3)
                 self.total_time_1 += (time.clock() - start)
                 self.total_step_1 += 1
                 print( 'Black: \n'
@@ -78,7 +77,7 @@ class game:
                       'number of captured workers =', self.eat_piece)
             elif self.turn == 2:
                 start = time.clock()
-                self.move(2, 2)
+                self.move(2, 4)
                 self.total_time_2 += (time.clock() - start)
                 self.total_step_2 += 1
                 print( 'White: \n'
@@ -92,7 +91,6 @@ class game:
             # Quit if close the windows
             if event.type == pygame.QUIT:
                 exit()
-
             elif self.status == 0:
                 x, y = event.pos
                 coor_y = math.floor(x / self.sizeofcell)
@@ -167,7 +165,7 @@ class game:
                                      (self.sizeofcell * y3, self.sizeofcell * x3))
         if self.status == 3:
             if self.turn == 1:
-                print("Black Win!")
+                print("White Win!")
                 print( 'Black: \n'
                     'total steps =', self.total_step_1, '\n'
                       'total expaned nodes =', self.total_nodes_1, '\n'
@@ -175,7 +173,7 @@ class game:
                       'average time per move =', self.total_time_1 / self.total_step_1, '\n'
                       'number of captured workers =', self.eat_piece)
             else:
-                print("White Win!")
+                print("Black Win!")
                 print( 'White: \n'
                     'total steps =', self.total_step_2, '\n'
                       'total expaned nodes =', self.total_nodes_2, '\n'
