@@ -126,12 +126,12 @@ def freeFlowEcSmart(puzzle,rows,columns,left, values,sourceA,sourceB,idx,frontie
     #print(puzzle)
     #print(frontier)
     #puzzle_temp = copy.deepcopy(puzzle)
-    if pos_now == sourceB[idx]:
-        #print(checkcounter)
-        check_move3 = check3(puzzle, rows, columns, value)
-        check_move4 = check4(puzzle, rows, columns, sourceA, sourceB,idx,values)
 
-        if check1(puzzle,idx,values,sourceA[idx],sourceB[idx],rows,columns) and check_move3 and check_move4:
+    if pos_now == sourceB[idx]:
+        print(checkcounter)
+        check_move3 = check3(puzzle, rows, columns, value)
+        #check_move4 = check4(puzzle, rows, columns, sourceA, sourceB,idx,values)
+        if check1(puzzle,idx,values,sourceA[idx],sourceB[idx],rows,columns) and check_move3  :
             if left == 1:
                 print('done')
                 print(counter)
@@ -149,14 +149,35 @@ def freeFlowEcSmart(puzzle,rows,columns,left, values,sourceA,sourceB,idx,frontie
     else:
         if puzzle[pos_now[0]][pos_now[1]] == '_' or  pos_now == sourceA[idx]:
             puzzle[pos_now[0]][pos_now[1]] = value
-            check_move2 = check2(puzzle,idx,values,sourceA,sourceB,rows,columns)
-            #check_move4 = check4(puzzle, rows, columns, sourceA, sourceB,idx,values)
+
+            check_move5 = check5(puzzle, idx, values, sourceA[idx], sourceB[idx], rows, columns, pos_now)
 
             #print(check_move3)
-            if (not check_move2) :
+            if  (not check_move5) :
+                puzzle[pos_now[0]][pos_now[1]] = '_'
+            elif not (check2(puzzle,idx,values,sourceA,sourceB,rows,columns)):
+                puzzle[pos_now[0]][pos_now[1]] = '_'
+
+            # elif not check6(puzzle,rows,columns,pos_now):
+            #     if not(check4(puzzle, rows, columns, sourceA, sourceB, idx, values, pos_now)):
+            #         puzzle[pos_now[0]][pos_now[1]] = '_'
+            #     else:
+            #         neighbors = getNeighbor_newnew(pos_now, rows, columns, idx, sourceB)
+            #         # neighbors = getNeighbor(pos_now, rows, columns)
+            #         for i in range(len(neighbors)):
+            #             neighbor = neighbors[i]
+            #             # print(neighbor)
+            #             if puzzle[neighbor[0]][neighbor[1]] == '_' or neighbor == sourceB[idx]:
+            #                 frontier.append(neighbor)
+            #                 result = freeFlowEcSmart(puzzle, rows, columns, left, values, sourceA, sourceB, idx,
+            #                                          frontier)
+            #                 if result != 0:
+            #                     return result
+            elif not (check4(puzzle, rows, columns, sourceA, sourceB, idx, values, pos_now)):
                 puzzle[pos_now[0]][pos_now[1]] = '_'
             else:
-                neighbors = getNeighbor(pos_now,rows,columns)
+                neighbors = getNeighbor_newnew(pos_now,rows,columns,idx,sourceB)
+                # neighbors = getNeighbor(pos_now, rows, columns)
                 for i in range(len(neighbors)):
                     neighbor = neighbors[i]
             #print(neighbor)
@@ -279,9 +300,11 @@ def check3(puzzle,rows,columns,value):
                     return False
     return True
 
-def check4(puzzle,rows,columns,sourceA,sourceB,idx,values):
+def check4(puzzle,rows,columns,sourceA,sourceB,idx,values,pos):
     # check if there is isolated blank area
     modified = []
+    sourceA_temp = copy.deepcopy(sourceA)
+    sourceA_temp[idx] = pos
     for i in range (rows):
         for j in range(columns):
             node_now = puzzle[i][j]
@@ -317,10 +340,10 @@ def check4(puzzle,rows,columns,sourceA,sourceB,idx,values):
                         #     if puzzle[neighbor[0]][neighbor[1]] == values[idx]:
                         #         indicator = True
                         #     else:
-                        if neighbor in sourceA[idx+1:]:
-                            block_sourceA_neighbor.append(sourceA.index(neighbor))
+                        if neighbor in sourceA_temp[idx:]:
+                            block_sourceA_neighbor.append(sourceA_temp.index(neighbor))
 
-                        elif neighbor in sourceB[idx+1:]:
+                        elif neighbor in sourceB[idx:]:
                             block_sourceB_neighbor.append(sourceB.index(neighbor))
                         #       if neighbor in sourceA[idx:] or neighbor in sourceB[idx:]:
                         #          indicator = True
@@ -346,8 +369,74 @@ def check4(puzzle,rows,columns,sourceA,sourceB,idx,values):
     #print(True)
     return True
 
+def check5 (puzzle,idx,values,sourceA,sourceB,rows,columns,pos):
+    value = values[idx]
+    for row in range(rows):
+        for column in range(columns):
+            if [row,column] != sourceA and [row,column] != sourceB and [row,column]  != pos:
+                if puzzle[row][column] == value:
+                    count = 0
+                    neighbors = getNeighbor([row,column],rows,columns)
+                    for i in range(len(neighbors)):
 
+                        if puzzle[neighbors[i][0]][neighbors[i][1]] == value:
+                            count += 1
+                    if count != 2:
+                        return False
+    return True
 
+def check6(puzzle,rows,columns,pos):
+    X = rows
+    Y = columns
+    getcircle = lambda x, y: [[x2, y2] for x2 in range(x - 1, x + 2)
+                              for y2 in range(y - 1, y + 2)
+                              if (-1 < x <= X and
+                                  -1 < y <= Y and
+                                  (x != x2 or y != y2) and
+                                  (0 <= x2 <= X) and
+                                  (0 <= y2 <= Y))]
+    circle = getcircle(pos[0],pos[1])
+    print(circle)
+    modified = []
+    for i in range(len(circle)):
+        node_now = puzzle[circle[i][0]][circle[i][1]]
+        if node_now == "_":
+            # using BFS to determine whether there is still path to source node
+            A = [circle[i][0],circle[i][1]]
+            frontier = deque([A])
+            while not (not frontier):
+                A = frontier.popleft()
+                # print(A)
+                x = A[0]
+                y = A[1]
+                puzzle[x][y] = 'X'
+                modified.append([x, y])
+                # print(puzzle)
+                neighbors = getNeighbor(A, rows, columns)
+                for m in range(len(neighbors)):
+                    neighbor = neighbors[m]
+                    if neighbor in circle:
+                        if puzzle[neighbor[0]][neighbor[1]] == '_':
+                            frontier.append(neighbor)
+            # if not indicator:
+            if not frontier:
+                break
+    for i in range(len(circle)):
+        node_now = puzzle[circle[i][0]][circle[i][1]]
+        if node_now == "_":
+
+            for k in range(len(modified)):
+                x = modified[k][0]
+                y = modified[k][1]
+                puzzle[x][y] = '_'
+                # print(False)
+                return False
+    for k in range(len(modified)):
+        x = modified[k][0]
+        y = modified[k][1]
+        puzzle[x][y] = '_'
+        # print(False)
+    return True
 
 def pathAvailable(puzzle,frontier,B,rows,columns,value):
     modified = []
@@ -366,6 +455,7 @@ def pathAvailable(puzzle,frontier,B,rows,columns,value):
             modified.append([x,y])
             #print(puzzle)
         neighbors = getNeighbor(A,rows,columns)
+        #print(neighbors)
         for i in range(len(neighbors)):
             neighbor = neighbors[i]
         #print(neighbor)
@@ -380,10 +470,10 @@ def pathAvailable(puzzle,frontier,B,rows,columns,value):
 
 def getNeighbor(pos,rows,columns):
     neighbors = []
-    i_lower = max(0,pos[0] - 1)
-    i_upper = min(columns-1,pos[0]+1)
-    j_lower = max(0,pos[1] - 1)
-    j_upper = min(rows-1,pos[1] + 1)
+    i_lower = max(0,pos[0] - 1) # up
+    i_upper = min(rows-1,pos[0]+1)  # down
+    j_lower = max(0,pos[1] - 1) # left
+    j_upper = min(columns-1,pos[1] + 1) #right
 
 
     if (j_upper != pos[1]):
@@ -453,6 +543,106 @@ def getNeighbor_ordered(pos,rows,columns):
         neighborsNew.append(neighbors[idx])
     return(neighborsNew)
 
+def getNeighbor_newnew(pos,rows,columns,idx,sourceB):
+    neighbors = []
+    i_lower = max(0,pos[0] - 1) # up
+    i_upper = min(rows-1,pos[0]+1) # down
+    j_lower = max(0,pos[1] - 1) # left
+    j_upper = min(columns-1,pos[1] + 1) #right
+    #print(i_lower,i_upper,j_upper,j_lower)
+    # diff = [ai - bi for ai, bi in zip(sourceB[idx] , pos)]
+    # if diff[0] > 0  and diff [1] > 0: # down right
+    #     if (j_upper != pos[1]):
+    #         neighbors.append([pos[0], j_upper])
+    #     if (i_upper != pos[0]):
+    #         neighbors.append([i_upper, pos[1]])
+    #     if (j_lower != pos[1]):
+    #         neighbors.append([pos[0], j_lower])
+    #     if (i_lower != pos[0]):
+    #         neighbors.append([i_lower, pos[1]])
+    #
+    # elif diff[0] > 0 and diff [1] < 0: # down left
+    #     if (j_lower != pos[1]):
+    #         neighbors.append([pos[0], j_lower])
+    #     if (i_upper != pos[0]):
+    #         neighbors.append([i_upper, pos[1]])
+    #     if (j_upper != pos[1]):
+    #         neighbors.append([pos[0], j_upper])
+    #     if (i_lower != pos[0]):
+    #         neighbors.append([i_lower, pos[1]])
+    #
+    #
+    # elif diff[0] < 0 and diff[1] < 0: # up left
+    #     if (i_lower != pos[0]):
+    #         neighbors.append([i_lower, pos[1]])
+    #     if (j_lower != pos[1]):
+    #         neighbors.append([pos[0], j_lower])
+    #     if (j_upper != pos[1]):
+    #         neighbors.append([pos[0], j_upper])
+    #     if (i_upper != pos[0]):
+    #         neighbors.append([i_upper, pos[1]])
+    #
+    # elif diff[0] < 0 and diff[1] > 0: # up right
+    #     if (j_upper != pos[1]):
+    #         neighbors.append([pos[0], j_upper])
+    #     if (i_lower != pos[0]):
+    #         neighbors.append([i_lower, pos[1]])
+    #     if (j_lower != pos[1]):
+    #         neighbors.append([pos[0], j_lower])
+    #     if (i_upper != pos[0]):
+    #         neighbors.append([i_upper, pos[1]])
+    # elif diff[0] == 0 and diff[1] > 0: #right
+    #     if (j_upper != pos[1]):
+    #         neighbors.append([pos[0], j_upper])
+    #     if (i_lower != pos[0]):
+    #         neighbors.append([i_lower, pos[1]])
+    #     if (j_lower != pos[1]):
+    #         neighbors.append([pos[0], j_lower])
+    #     if (i_upper != pos[0]):
+    #         neighbors.append([i_upper, pos[1]])
+    # elif diff [0] == 0 and diff [1] < 0 : #left
+    #     if (j_lower != pos[1]):
+    #         neighbors.append([pos[0], j_lower])
+    #     if (i_upper != pos[0]):
+    #         neighbors.append([i_upper, pos[1]])
+    #     if (j_upper != pos[1]):
+    #         neighbors.append([pos[0], j_upper])
+    #     if (i_lower != pos[0]):
+    #         neighbors.append([i_lower, pos[1]])
+    # elif diff [1] == 0 and diff [1] < 0: #up
+    #     if (i_lower != pos[0]):
+    #         neighbors.append([i_lower, pos[1]])
+    #     if (j_lower != pos[1]):
+    #         neighbors.append([pos[0], j_lower])
+    #     if (i_upper != pos[0]):
+    #         neighbors.append([i_upper, pos[1]])
+    #     if (j_upper != pos[1]):
+    #         neighbors.append([pos[0], j_upper])
+    # else: # down
+    #     if (i_upper != pos[0]):
+    #         neighbors.append([i_upper, pos[1]])
+    #     if (j_upper != pos[1]):
+    #         neighbors.append([pos[0], j_upper])
+    #     if (i_lower != pos[0]):
+    #         neighbors.append([i_lower, pos[1]])
+    #     if (j_lower != pos[1]):
+    #         neighbors.append([pos[0], j_lower])
+
+    # order them with respect to the distance to the wall
+    neighborsNew = []
+    if (j_upper != pos[1]):
+        neighbors.append([pos[0],j_upper])
+    if (j_lower != pos[1]):
+        neighbors.append([pos[0],j_lower])
+    if (i_lower != pos[0]):
+        neighbors.append([i_lower,pos[1]])
+    if (i_upper != pos[0]):
+        neighbors.append([i_upper,pos[1]])
+    for i in range(len(neighbors)):
+        if neighbors[i] == sourceB[idx]:
+            neighbors[0],neighbors[i] = neighbors[i],neighbors[0]
+    return(neighbors)
+
 def heuristic(A,B,rows,columns):
     distance = []
     for i in range(len(A)):
@@ -518,13 +708,13 @@ def main():
         values_for_dumb.append(Fordumb[i][0])
         sourceA_for_dumb.append(Fordumb[i][1])
         sourceB_for_dumb.append((Fordumb[i][2]))
-    order = [[0,0],[1,1],[2,2],[3,3],[4,4],[5,5],[6,6]]
-    pos_now = sourceA[order[idx][1]]
-    #pos_now = sourceA[0]
+    #order = [[0,0],[1,1],[2,2],[3,3],[4,4],[5,5],[6,6]]
+    #pos_now = sourceA[order[idx][1]]
+    pos_now = sourceA[0]
     # global count
     # count = 0
     #result = freeFlowSmart(puzzle,rows,columns,left, values,sourceA,sourceB,idx, [pos_now],order)
-    ordered_values,ordered_A,ordered_B = ordering(-1, values, sourceA, sourceB, puzzle, rows, columns)
+    #ordered_values,ordered_A,ordered_B = ordering(-1, values, sourceA, sourceB, puzzle, rows, columns)
     #pos_now = ordered_A[idx]
     start = time.time()
     #result = freeFlowEcSmart(puzzle, rows, columns, left, ordered_values, ordered_A, ordered_B, idx, [pos_now])
