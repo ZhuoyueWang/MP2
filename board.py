@@ -33,8 +33,6 @@ class State:
                     if matrix[i][j] == 2:
                         self.white_positions.append((i, j))
                         self.white_num += 1
-
-# State.transfer(action), given an action, return a resultant state
     def transfer(self, action):
         black_pos = list(self.black_positions)
         white_pos = list(self.white_positions)
@@ -85,21 +83,21 @@ class State:
     def available_actions(self):
         available_actions = []
         if self.turn == 1:
-            for pos in sorted(self.black_positions, key=lambda p: (p[0], -p[1]), reverse=True):
-                if pos[0] != self.height - 1 and pos[1] != 0 and (pos[0] + 1, pos[1] - 1) not in self.black_positions:
-                    available_actions.append(Action(pos, 1, 1))
-                if pos[0] != self.height - 1 and (pos[0] + 1, pos[1]) not in self.black_positions and (pos[0] + 1, pos[1]) not in self.white_positions:
-                    available_actions.append(Action(pos, 2, 1))
-                if pos[0] != self.height - 1 and pos[1] != self.width - 1 and (pos[0] + 1, pos[1] + 1) not in self.black_positions:
-                    available_actions.append(Action(pos, 3, 1))
+            for i in sorted(self.black_positions, key=lambda p: (p[0], -p[1]), reverse=True):
+                if i[0] != self.height - 1 and i[1] != 0 and (i[0] + 1, i[1] - 1) not in self.black_positions:
+                    available_actions.append(Action(i, 1, 1))
+                if i[0] != self.height - 1 and (i[0] + 1, i[1]) not in self.black_positions and (i[0] + 1, i[1]) not in self.white_positions:
+                    available_actions.append(Action(i, 2, 1))
+                if i[0] != self.height - 1 and i[1] != self.width - 1 and (i[0] + 1, i[1] + 1) not in self.black_positions:
+                    available_actions.append(Action(i, 3, 1))
         elif self.turn == 2:
-            for pos in sorted(self.white_positions, key=lambda p: (p[0], p[1])):
-                if pos[0] != 0 and pos[1] != 0 and (pos[0] - 1, pos[1] - 1) not in self.white_positions:
-                    available_actions.append(Action(pos, 1, 2))
-                if pos[0] != 0 and (pos[0] - 1, pos[1]) not in self.black_positions and (pos[0] - 1, pos[1]) not in self.white_positions:
-                    available_actions.append(Action(pos, 2, 2))
-                if pos[0] != 0 and pos[1] != self.width - 1 and (pos[0] - 1, pos[1] + 1) not in self.white_positions:
-                    available_actions.append(Action(pos, 3, 2))
+            for i in sorted(self.white_positions, key=lambda p: (p[0], p[1])):
+                if i[0] != 0 and i[1] != 0 and (i[0] - 1, i[1] - 1) not in self.white_positions:
+                    available_actions.append(Action(i, 1, 2))
+                if i[0] != 0 and (i[0] - 1, i[1]) not in self.black_positions and (i[0] - 1, i[1]) not in self.white_positions:
+                    available_actions.append(Action(i, 2, 2))
+                if i[0] != 0 and i[1] != self.width - 1 and (i[0] - 1, i[1] + 1) not in self.white_positions:
+                    available_actions.append(Action(i, 3, 2))
         return available_actions
 
     def getmatrix(self):

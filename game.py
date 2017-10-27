@@ -66,7 +66,7 @@ class game:
             # Black
             if self.turn == 1:
                 start = time.clock()
-                self.move(2, 3)
+                self.move(1, 3)
                 self.total_time_1 += (time.clock() - start)
                 self.total_step_1 += 1
                 print( 'Black: \n'
@@ -77,7 +77,7 @@ class game:
                       'number of captured workers =', self.eat_piece)
             elif self.turn == 2:
                 start = time.clock()
-                self.move(2, 4)
+                self.move(1, 4)
                 self.total_time_2 += (time.clock() - start)
                 self.total_step_2 += 1
                 print( 'White: \n'
@@ -116,7 +116,6 @@ class game:
         pygame.display.flip()
 
 
-    # display the graphics in the window
     def display(self):
         self.screen.blit(self.board, (0, 0))
         for i in range(8):
@@ -125,6 +124,28 @@ class game:
                     self.screen.blit(self.blackchess, (self.sizeofcell * j + 10, self.sizeofcell * i + 10))
                 elif self.matrix[i][j] == 2:
                     self.screen.blit(self.whitechess, (self.sizeofcell * j + 10, self.sizeofcell * i + 10))
+        if self.status == 3:
+            if self.turn == 1:
+                print("White Win!")
+                print( 'Black: \n'
+                    'total steps =', self.total_step_1, '\n'
+                      'total expaned nodes =', self.total_nodes_1, '\n'
+                      'average expaned nodes per move =', self.total_nodes_1 / self.total_step_1, '\n'
+                      'average time per move =', self.total_time_1 / self.total_step_1, '\n'
+                      'number of captured workers =', self.eat_piece)
+            else:
+                print("Black Win!")
+                print( 'White: \n'
+                    'total steps =', self.total_step_2, '\n'
+                      'total expaned nodes =', self.total_nodes_2, '\n'
+                      'average expaned nodes per move =', self.total_nodes_2 / self.total_step_2, '\n'
+                      'average time per move =', self.total_time_2 / self.total_step_2, '\n'
+                      'number of captured workers =', self.eat_piece)
+            rect = pygame.Rect(0, 0, 560, 560)
+            sub = self.screen.subsurface(rect)
+            pygame.image.save(sub, "screenshot.jpg")
+            sys.exit()
+
         if self.status == 1:
             # only downward is acceptable
             if self.matrix[self.ori_x][self.ori_y] == 1:
@@ -163,27 +184,7 @@ class game:
                 if x3 >= 0 and self.matrix[x3][y3] == 0:
                     self.screen.blit(self.outline,
                                      (self.sizeofcell * y3, self.sizeofcell * x3))
-        if self.status == 3:
-            if self.turn == 1:
-                print("White Win!")
-                print( 'Black: \n'
-                    'total steps =', self.total_step_1, '\n'
-                      'total expaned nodes =', self.total_nodes_1, '\n'
-                      'average expaned nodes per move =', self.total_nodes_1 / self.total_step_1, '\n'
-                      'average time per move =', self.total_time_1 / self.total_step_1, '\n'
-                      'number of captured workers =', self.eat_piece)
-            else:
-                print("Black Win!")
-                print( 'White: \n'
-                    'total steps =', self.total_step_2, '\n'
-                      'total expaned nodes =', self.total_nodes_2, '\n'
-                      'average expaned nodes per move =', self.total_nodes_2 / self.total_step_2, '\n'
-                      'average time per move =', self.total_time_2 / self.total_step_2, '\n'
-                      'number of captured workers =', self.eat_piece)
-            rect = pygame.Rect(0, 0, 560, 560)
-            sub = self.screen.subsurface(rect)
-            pygame.image.save(sub, "screenshot.jpg")
-            sys.exit()
+
 
     def movechess(self):
         self.matrix[self.new_x][self.new_y] = self.matrix[self.ori_x][self.ori_y]
@@ -195,6 +196,11 @@ class game:
         self.status = 0
 
     def isabletomove(self):
+        if checkMove == True:
+            return 1
+        return 0
+
+    def checkMove(self):
         if (self.matrix[self.ori_x][self.ori_y] == 1
             and self.matrix[self.new_x][self.new_y] != 1
             and self.new_x - self.ori_x == 1
@@ -205,8 +211,9 @@ class game:
                 and self.ori_x - self.new_x == 1
                 and self.ori_y - 1 <= self.new_y <= self.ori_y + 1
                 and not (self.ori_y == self.new_y and self.matrix[self.new_x][self.new_y] == 1)):
-            return 1
-        return 0
+            return True
+        return False
+
 
     def move(self, searchtype, evaluation):
         if searchtype == 1:
@@ -215,10 +222,10 @@ class game:
             return self.move_alphabeta(evaluation)
 
     def move_minimax(self, function_type):
-        board, nodes, piece = minimax(self.matrix, self.turn, 3, function_type).minimax()
+        board, nodes, piece = search(self.matrix, self.turn, 3, function_type).minimax()
         self.moveNode(board,nodes,piece)
     def move_alphabeta(self, function_type):
-        board, nodes, piece = alphabeta(self.matrix, self.turn, 5, function_type).alphabet()
+        board, nodes, piece = searchState(self.matrix, self.turn, 5, function_type).alphabet()
         self.moveNode(board,nodes,piece)
 
     def moveNode(self,board,nodes,piece):
