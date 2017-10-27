@@ -55,12 +55,12 @@ class game:
             # Black
             if self.turn == 1:
                 start = time.clock()
-                self.move(1, 3)
+                self.move(2, 3)
                 self.totalTime1 += (time.clock() - start)
                 self.totalStep1 += 1
             elif self.turn == 2:
                 start = time.clock()
-                self.move(1, 4)
+                self.move(2, 4)
                 self.totalTime2 += (time.clock() - start)
                 self.totalStep2 += 1
         for event in pygame.event.get():
@@ -220,7 +220,7 @@ class game:
         board, nodes, piece = search(self.matrix, self.turn, 3, function_type).minimax()
         self.moveNode(board,nodes,piece)
     def move_alphabeta(self, function_type):
-        board, nodes, piece = searchState(self.matrix, self.turn, 5, function_type).alphabet()
+        board, nodes, piece = search(self.matrix, self.turn, 5, function_type).alphabet()
         self.moveNode(board,nodes,piece)
 
     def moveNode(self,board,nodes,piece):

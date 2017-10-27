@@ -32,7 +32,7 @@ class State:
                     if matrix[i][j] == 2:
                         self.white_positions.append((i, j))
                         self.white_num += 1
-                        
+
     def transfer(self, action):
         black_pos = list(self.black_positions)
         white_pos = list(self.white_positions)
@@ -134,10 +134,10 @@ class State:
         return 6*self.myscore(turn) + random.random()
 
     def offensive2(self, turn):
-        return 2*self.myscore(turn) - 6*self.enemyscore(turn)
+        return 2*self.myscore(turn) - 6*self.enemyscore(turn)+ random.random()
 
     def defensive2(self, turn):
-        return 6*self.myscore(turn) - 2*self.enemyscore(turn)
+        return 6*self.myscore(turn) - 2*self.enemyscore(turn)+ random.random()
 
     def choice(self, turn):
         if self.function == 0:
