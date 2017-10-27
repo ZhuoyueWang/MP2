@@ -1,5 +1,4 @@
 from search import *
-from board import *
 import sys
 import math
 import time
@@ -9,9 +8,8 @@ import pygame
 class game:
     def __init__(self):
         pygame.init()
-        self.width, self.height = 560, 560
         self.sizeofcell = int(560/8)
-        self.screen = pygame.display.set_mode((self.width, self.height))
+        self.screen = pygame.display.set_mode((560, 560))
         self.screen.fill([255, 255, 255])
         self.board = 0
         self.blackchess = 0
@@ -20,15 +18,26 @@ class game:
         self.reset = 0
         self.winner = 0
         self.computer = None
-        # status 0: origin;  1: ready to move; 2: end
-        # turn 1: black 2: white
         self.status = 0
         self.turn = 1
-        # Variable for moving
         self.ori_x = 0
         self.ori_y = 0
         self.new_x = 0
         self.new_y = 0
+        self.totalNode1 = 0
+        self.totalNode2 = 0
+        self.totalTime1 = 0
+        self.totalTime2 = 0
+        self.totalStep1 = 0
+        self.totalStep2 = 0
+        self.eaten = 0
+        self.clock = pygame.time.Clock()
+        self.board = pygame.image.load_extended('board.png')
+        self.board = pygame.transform.scale(self.board, (560, 560))
+        self.blackchess = pygame.image.load_extended('black.png')
+        self.blackchess = pygame.transform.scale(self.blackchess, (self.sizeofcell- 20, self.sizeofcell - 20))
+        self.whitechess = pygame.image.load_extended('white.png')
+        self.whitechess = pygame.transform.scale(self.whitechess, (self.sizeofcell - 20, self.sizeofcell - 20))
         # matrix for position of chess, 0 - empty, 1 - black, 2 - white
         self.matrix = [[1, 1, 1, 1, 1, 1, 1, 1],
                             [1, 1, 1, 1, 1, 1, 1, 1],
@@ -38,24 +47,6 @@ class game:
                             [0, 0, 0, 0, 0, 0, 0, 0],
                             [2, 2, 2, 2, 2, 2, 2, 2],
                             [2, 2, 2, 2, 2, 2, 2, 2]]
-
-        self.total_nodes_1 = 0
-        self.total_nodes_2 = 0
-        self.total_time_1 = 0
-        self.total_time_2 = 0
-        self.total_step_1 = 0
-        self.total_step_2 = 0
-        self.eat_piece = 0
-        self.clock = pygame.time.Clock()
-        self.graph()
-
-    def graph(self):
-        self.board = pygame.image.load_extended('board.png')
-        self.board = pygame.transform.scale(self.board, (560, 560))
-        self.blackchess = pygame.image.load_extended('black.png')
-        self.blackchess = pygame.transform.scale(self.blackchess, (self.sizeofcell- 20, self.sizeofcell - 20))
-        self.whitechess = pygame.image.load_extended('white.png')
-        self.whitechess = pygame.transform.scale(self.whitechess, (self.sizeofcell - 20, self.sizeofcell - 20))
 
     def run(self):
         self.clock.tick(60)
@@ -67,25 +58,25 @@ class game:
             if self.turn == 1:
                 start = time.clock()
                 self.move(1, 3)
-                self.total_time_1 += (time.clock() - start)
-                self.total_step_1 += 1
+                self.totalTime1 += (time.clock() - start)
+                self.totalStep1 += 1
                 print( 'Black: \n'
-                    'total steps =', self.total_step_1, '\n'
-                      'total expaned nodes =', self.total_nodes_1, '\n'
-                      'average expaned nodes per move =', self.total_nodes_1 / self.total_step_1, '\n'
-                      'average time per move =', self.total_time_1 / self.total_step_1, '\n'
-                      'number of captured workers =', self.eat_piece)
+                    'total steps =', self.totalStep1, '\n'
+                      'total expaned nodes =', self.totalNode1, '\n'
+                      'average expaned nodes per move =', self.totalNode1 / self.totalStep1, '\n'
+                      'average time per move =', self.totalTime1 / self.totalStep1, '\n'
+                      'number of captured workers =', self.eaten)
             elif self.turn == 2:
                 start = time.clock()
                 self.move(1, 4)
-                self.total_time_2 += (time.clock() - start)
-                self.total_step_2 += 1
+                self.totalTime2 += (time.clock() - start)
+                self.totalStep2 += 1
                 print( 'White: \n'
-                    'total steps =', self.total_step_2, '\n'
-                      'total expaned nodes =', self.total_nodes_2, '\n'
-                      'average expaned nodes per move =', self.total_nodes_2 / self.total_step_2, '\n'
-                      'average time per move =', self.total_time_2 / self.total_step_2, '\n'
-                      'number of captured workers =', self.eat_piece)
+                    'total steps =', self.totalStep2, '\n'
+                      'total expaned nodes =', self.totalNode2, '\n'
+                      'average expaned nodes per move =', self.totalNode2 / self.totalStep2, '\n'
+                      'average time per move =', self.totalTime2 / self.totalStep2, '\n'
+                      'number of captured workers =', self.eaten)
 
         for event in pygame.event.get():
             # Quit if close the windows
@@ -128,19 +119,19 @@ class game:
             if self.turn == 1:
                 print("White Win!")
                 print( 'Black: \n'
-                    'total steps =', self.total_step_1, '\n'
-                      'total expaned nodes =', self.total_nodes_1, '\n'
-                      'average expaned nodes per move =', self.total_nodes_1 / self.total_step_1, '\n'
-                      'average time per move =', self.total_time_1 / self.total_step_1, '\n'
-                      'number of captured workers =', self.eat_piece)
+                    'total steps =', self.totalStep1, '\n'
+                      'total expaned nodes =', self.totalNode1, '\n'
+                      'average expaned nodes per move =', self.totalNode1 / self.totalStep1, '\n'
+                      'average time per move =', self.totalTime1 / self.totalStep1, '\n'
+                      'number of captured workers =', self.eaten)
             else:
                 print("Black Win!")
                 print( 'White: \n'
-                    'total steps =', self.total_step_2, '\n'
-                      'total expaned nodes =', self.total_nodes_2, '\n'
-                      'average expaned nodes per move =', self.total_nodes_2 / self.total_step_2, '\n'
-                      'average time per move =', self.total_time_2 / self.total_step_2, '\n'
-                      'number of captured workers =', self.eat_piece)
+                    'total steps =', self.totalStep2, '\n'
+                      'total expaned nodes =', self.totalNode2, '\n'
+                      'average expaned nodes per move =', self.totalNode2 / self.totalStep2, '\n'
+                      'average time per move =', self.totalTime2 / self.totalStep2, '\n'
+                      'number of captured workers =', self.eaten)
             rect = pygame.Rect(0, 0, 560, 560)
             sub = self.screen.subsurface(rect)
             pygame.image.save(sub, "screenshot.jpg")
@@ -231,12 +222,12 @@ class game:
     def moveNode(self,board,nodes,piece):
         self.matrix = board.getmatrix()
         if self.turn == 1:
-            self.total_nodes_1 += nodes
+            self.totalNode1 += nodes
             self.turn = 2
         elif self.turn == 2:
-            self.total_nodes_2 += nodes
+            self.totalNode2 += nodes
             self.turn = 1
-        self.eat_piece = 16 - piece
+        self.eaten = 16 - piece
         if self.isgoalstate():
             self.status = 3
 

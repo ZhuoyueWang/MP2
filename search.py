@@ -32,6 +32,7 @@ class State:
                     if matrix[i][j] == 2:
                         self.white_positions.append((i, j))
                         self.white_num += 1
+                        
     def transfer(self, action):
         black_pos = list(self.black_positions)
         white_pos = list(self.white_positions)
