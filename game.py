@@ -10,11 +10,7 @@ class game:
         pygame.init()
         self.sizeofcell = int(560/8)
         self.board = 0
-        self.blackchess = 0
-        self.whitechess = 0
         self.clock = pygame.time.Clock()
-        self.outline = 0
-        self.winner = 0
         self.status = 0
         self.turn = 1
         self.x = 0
@@ -79,7 +75,6 @@ class game:
                     self.x = self.newX
                     self.y = self.newY
         self.display()
-        pygame.display.flip()
 
     def display(self):
         if self.status == 3:
@@ -114,7 +109,7 @@ class game:
                       'average time per move =', self.totalTime1 / self.totalStep1, '\n'
                       'number of captured workers =', self.eaten)
                 for i in self.matrix:
-                    print(i)                      
+                    print(i)
             sys.exit()
 
         if self.status == 1:

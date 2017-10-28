@@ -10,11 +10,7 @@ class game:
         pygame.init()
         self.size = int(560/8)
         self.board = 0
-        self.blackchess = 0
-        self.whitechess = 0
         self.clock = pygame.time.Clock()
-        self.outline = 0
-        self.winner = 0
         self.status = 0
         self.turn = 1
         self.x = 0
