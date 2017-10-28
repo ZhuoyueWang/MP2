@@ -8,9 +8,7 @@ import pygame
 class game:
     def __init__(self):
         pygame.init()
-        self.sizeofcell = int(560/8)
-#        self.screen = pygame.display.set_mode((560, 560))
-#        self.screen.fill([255, 255, 255])
+        self.size = int(560/8)
         self.board = 0
         self.blackchess = 0
         self.whitechess = 0
@@ -40,13 +38,12 @@ class game:
     def run(self):
         self.clock.tick(60)
         # clear the screen
-    #    self.screen.fill([255, 255, 255])
         self.status = 5
         if self.status == 5:
             # Black
             if self.turn == 1:
                 start = time.clock()
-                self.move(1, 1)
+                self.move(2, 4)
                 self.totalTime1 += (time.clock() - start)
                 self.totalStep1 += 1
                 for i in self.matrix:
@@ -54,7 +51,7 @@ class game:
                 print('\n')
             elif self.turn == 2:
                 start = time.clock()
-                self.move(1, 2)
+                self.move(2, 2)
                 self.totalTime2 += (time.clock() - start)
                 self.totalStep2 += 1
                 for i in self.matrix:
@@ -67,17 +64,17 @@ class game:
                 exit()
             elif self.status == 0:
                 x, y = event.pos
-                coor_y = math.floor(x / self.sizeofcell)
-                coor_x = math.floor(y / self.sizeofcell)
+                coor_y = math.floor(x / self.size)
+                coor_x = math.floor(y / self.size)
                 if self.matrix[coor_x][coor_y] == self.turn:
                     self.status = 1
-                    self.y = math.floor(x / self.sizeofcell)
-                    self.x = math.floor(y / self.sizeofcell)
+                    self.y = math.floor(x / self.size)
+                    self.x = math.floor(y / self.size)
             # check whether the selected chess can move, otherwise select other chess
             elif self.status == 1:
                 x, y = event.pos
-                self.newY = math.floor(x / self.sizeofcell)
-                self.newX = math.floor(y / self.sizeofcell)
+                self.newY = math.floor(x / self.size)
+                self.newX = math.floor(y / self.size)
                 if self.isabletomove():
                     self.movechess()
                     if (self.newX == 4 and self.matrix[self.newX][self.newY] == 1) or (self.newX == 0 and self.matrix[self.newX][self.newY] == 2):

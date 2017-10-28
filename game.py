@@ -9,18 +9,10 @@ class game:
     def __init__(self):
         pygame.init()
         self.sizeofcell = int(560/8)
-        self.screen = pygame.display.set_mode((560, 560))
-        self.screen.fill([255, 255, 255])
         self.board = 0
         self.blackchess = 0
         self.whitechess = 0
         self.clock = pygame.time.Clock()
-        self.board = pygame.image.load_extended('board.png')
-        self.board = pygame.transform.scale(self.board, (560, 560))
-        self.blackchess = pygame.image.load_extended('black.png')
-        self.blackchess = pygame.transform.scale(self.blackchess, (self.sizeofcell- 20, self.sizeofcell - 20))
-        self.whitechess = pygame.image.load_extended('white.png')
-        self.whitechess = pygame.transform.scale(self.whitechess, (self.sizeofcell - 20, self.sizeofcell - 20))
         self.outline = 0
         self.winner = 0
         self.status = 0
@@ -49,7 +41,6 @@ class game:
     def run(self):
         self.clock.tick(60)
         # clear the screen
-        self.screen.fill([255, 255, 255])
         self.status = 5
         if self.status == 5:
             # Black
@@ -91,13 +82,6 @@ class game:
         pygame.display.flip()
 
     def display(self):
-        self.screen.blit(self.board, (0, 0))
-        for i in range(8):
-            for j in range(8):
-                if self.matrix[i][j] == 1:
-                    self.screen.blit(self.blackchess, (self.sizeofcell * j + 10, self.sizeofcell * i + 10))
-                elif self.matrix[i][j] == 2:
-                    self.screen.blit(self.whitechess, (self.sizeofcell * j + 10, self.sizeofcell * i + 10))
         if self.status == 3:
             if self.turn == 1:
                 print("White Win!")
@@ -113,6 +97,8 @@ class game:
                       'average expaned nodes per move =', self.totalNode2 / self.totalStep2, '\n'
                       'average time per move =', self.totalTime2 / self.totalStep2, '\n'
                       'number of captured workers =', self.eaten)
+                for i in self.matrix:
+                    print(i)
             else:
                 print("Black Win!")
                 print( 'White: \n'
@@ -127,9 +113,8 @@ class game:
                       'average expaned nodes per move =', self.totalNode1 / self.totalStep1, '\n'
                       'average time per move =', self.totalTime1 / self.totalStep1, '\n'
                       'number of captured workers =', self.eaten)
-            rect = pygame.Rect(0, 0, 560, 560)
-            sub = self.screen.subsurface(rect)
-            pygame.image.save(sub, "screenshot.jpg")
+                for i in self.matrix:
+                    print(i)                      
             sys.exit()
 
         if self.status == 1:
@@ -141,18 +126,6 @@ class game:
                 y2 = self.y + 1
                 x3 = self.x + 1
                 y3 = self.y
-                # left down
-                if y1 >= 0 and self.matrix[x1][y1] != 1:
-                    self.screen.blit(self.outline,
-                                     (self.sizeofcell * y1, self.sizeofcell * x1))
-                # right down
-                if y2 <= 7 and self.matrix[x2][y2] != 1:
-                    self.screen.blit(self.outline,
-                                     (self.sizeofcell * y2, self.sizeofcell * x2))
-                # down
-                if x3 <= 7 and self.matrix[x3][y3] == 0:
-                    self.screen.blit(self.outline,
-                                     (self.sizeofcell * y3, self.sizeofcell * x3))
 
             if self.matrix[self.x][self.y] == 2:
                 x1 = self.x - 1
@@ -161,16 +134,6 @@ class game:
                 y2 = self.y + 1
                 x3 = self.x - 1
                 y3 = self.y
-                if y1 >= 0 and self.matrix[x1][y1] != 2:
-                    self.screen.blit(self.outline,
-                                     (self.sizeofcell * y1, self.sizeofcell * x1))
-                if y2 <= 7 and self.matrix[x2][y2] != 2:
-                    self.screen.blit(self.outline,
-                                     (self.sizeofcell * y2, self.sizeofcell * x2))
-                if x3 >= 0 and self.matrix[x3][y3] == 0:
-                    self.screen.blit(self.outline,
-                                     (self.sizeofcell * y3, self.sizeofcell * x3))
-
 
     def isgoalstate(self):
         if 2 in self.matrix[0] or 1 in self.matrix[7]:

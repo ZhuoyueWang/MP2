@@ -145,27 +145,20 @@ class State:
             return self.defensive2(turn)
 
     def isgoalstate(self, type=0):
-        if type == 0:
-            if 0 in [item[0] for item in self.white_positions] or len(self.black_positions) == 0:
-                return 2
-            if self.height - 1 in [item[0] for item in self.black_positions] or len(self.white_positions) == 0:
-                return 1
-            return 0
-        else:
-            count = 0
-            for i in self.black_positions:
-                if i[0] == 4:
-                    count += 1
-            if count == 3:
-                return True
-            count = 0
-            for i in self.white_positions:
-                if i[0] == 0:
-                    count += 1
-            if count == 3:
-                return True
-            if len(self.black_positions) <= 2 or len(self.white_positions) <= 2:
-                return True
+        count = 0
+        for i in self.black_positions:
+            if i[0] == 4:
+                count += 1
+        if count == 3:
+            return True
+        count = 0
+        for i in self.white_positions:
+            if i[0] == 0:
+                count += 1
+        if count == 3:
+            return True
+        if len(self.black_positions) <= 2 or len(self.white_positions) <= 2:
+            return True
         return False
 
 class search:
@@ -179,7 +172,7 @@ class search:
         self.piece_num = 0
 
     def minimax_MAX(self, state, depth):
-        if depth == self.maxdepth or state.isgoalstate(1) != 0:
+        if depth == self.maxdepth or state.isgoalstate() != 0:
             #print("choice", state.choice(self.turn))
             return state.choice(self.turn)
         result= -float("inf")
@@ -190,7 +183,7 @@ class search:
         return result
 
     def minimax_MIN(self, state, depth):
-        if depth == self.maxdepth or state.isgoalstate(1) != 0:
+        if depth == self.maxdepth or state.isgoalstate() != 0:
             #print("choice", state.choice(self.turn))
             return state.choice(self.turn)
         result= float("inf")
@@ -209,7 +202,7 @@ class search:
         for action in initialstate.available_actions():
             self.nodes += 1
             new_state = initialstate.transfer(action)
-            if new_state.isgoalstate(1):
+            if new_state.isgoalstate():
                 final_action = action
                 break
             minresult = self.minimax_MIN(new_state, 1)
