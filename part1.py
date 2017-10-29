@@ -717,7 +717,7 @@ def main():
     #ordered_values,ordered_A,ordered_B = ordering(-1, values, sourceA, sourceB, puzzle, rows, columns)
     #pos_now = ordered_A[idx]
     start = time.time()
-    #result = freeFlowEcSmart(puzzle, rows, columns, left, ordered_values, ordered_A, ordered_B, idx, [pos_now])
+    #result = freeFlowSmart(puzzle, rows, columns, left, values, sourceA, sourceB, idx, [pos_now])
     result = freeFlowEcSmart(puzzle, rows, columns, left, values, sourceA, sourceB, idx, [pos_now])
     #result = freeFlowDumb(puzzle, rows, columns, left, values_for_dumb, sourceA_for_dumb, sourceB_for_dumb, idx, [sourceA_for_dumb[idx]])
     end = time.time()

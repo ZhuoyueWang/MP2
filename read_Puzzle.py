@@ -15,7 +15,7 @@ def puzzleInput (puzzle,filename):
 
 def generatePuzzle():
     puzzle =[]
-    puzzleInput(puzzle,"input1212.txt")
+    puzzleInput(puzzle,"input10101.txt")
     [rows,columns] = np.shape(puzzle)
 
     sourceA = []
