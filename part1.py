@@ -718,10 +718,12 @@ def main():
     #pos_now = ordered_A[idx]
     start = time.time()
     #result = freeFlowSmart(puzzle, rows, columns, left, values, sourceA, sourceB, idx, [pos_now])
-    result = freeFlowEcSmart(puzzle, rows, columns, left, values, sourceA, sourceB, idx, [pos_now])
-    #result = freeFlowDumb(puzzle, rows, columns, left, values_for_dumb, sourceA_for_dumb, sourceB_for_dumb, idx, [sourceA_for_dumb[idx]])
+    #result = freeFlowEcSmart(puzzle, rows, columns, left, values, sourceA, sourceB, idx, [pos_now])
+    result = freeFlowDumb(puzzle, rows, columns, left, values_for_dumb, sourceA_for_dumb, sourceB_for_dumb, idx, [sourceA_for_dumb[idx]])
     end = time.time()
     print(end-start)
-    print(result)
+    for i in range(rows):
+        print(result[i])
+
 if __name__ == "__main__":
     main()
