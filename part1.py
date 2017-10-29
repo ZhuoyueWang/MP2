@@ -82,7 +82,7 @@ def freeFlowSmart(puzzle,rows,columns,left, values,sourceA,sourceB,idx,frontier)
     if pos_now == sourceB[idx]:
         #print(checkcounter)
 
-        if check1(puzzle_temp,idx,values,sourceA[idx],sourceB[idx],rows,columns):
+        if check1(puzzle_temp,idx,values,sourceA[idx],sourceB[idx],rows,columns) :
             if left == 1:
                 print('done')
                 print(counter)
@@ -717,9 +717,9 @@ def main():
     #ordered_values,ordered_A,ordered_B = ordering(-1, values, sourceA, sourceB, puzzle, rows, columns)
     #pos_now = ordered_A[idx]
     start = time.time()
-    #result = freeFlowSmart(puzzle, rows, columns, left, values, sourceA, sourceB, idx, [pos_now])
+    result = freeFlowSmart(puzzle, rows, columns, left, values, sourceA, sourceB, idx, [pos_now])
     #result = freeFlowEcSmart(puzzle, rows, columns, left, values, sourceA, sourceB, idx, [pos_now])
-    result = freeFlowDumb(puzzle, rows, columns, left, values_for_dumb, sourceA_for_dumb, sourceB_for_dumb, idx, [sourceA_for_dumb[idx]])
+    #result = freeFlowDumb(puzzle, rows, columns, left, values_for_dumb, sourceA_for_dumb, sourceB_for_dumb, idx, [sourceA_for_dumb[idx]])
     end = time.time()
     print(end-start)
     for i in range(rows):
