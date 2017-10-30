@@ -1,12 +1,14 @@
 import random
 
 class Status:
+    #check the specific information for every action
     def __init__(self, coordinate, direction, turn):
         self.coordinate = coordinate
         self.direction = direction
         self.turn = turn
-
+#the spefic information for the pieces
 class State:
+    #initialize
     def __init__(self, matrix=None, black=None, white=None, black_num=0,
          white_num=0, turn=1, function=0, width=8, height=8):
         self.width = width
@@ -33,6 +35,7 @@ class State:
                         self.white.append((i, j))
                         self.white_num += 1
 
+    #simulate the actions
     def transfer(self, action):
         black_pos = list(self.black)
         white_pos = list(self.white)
@@ -58,12 +61,14 @@ class State:
         height=self.height, width=self.width)
         return state
 
+    #change the turn
     def switchTurn(self,turn):
         if turn == 1:
             return 2
         if turn == 2:
             return 1
 
+            #the component in transfer state, to move one step
     def singleMove(self,initial, direction, turn):
         if turn == 1:
             if direction == 1:
@@ -80,6 +85,8 @@ class State:
             elif direction == 3:
                 return initial[0] - 1, initial[1] + 1
 
+
+    #to check what actions are available right now
     def available_actions(self):
         available_actions = []
         if self.turn == 1:
@@ -100,6 +107,7 @@ class State:
                     available_actions.append(Status(i, 3, 2))
         return available_actions
 
+        #get the board
     def getmatrix(self):
         matrix = [[0 for i in range(self.width)] for i in range(self.height)]
         for item in self.black:
@@ -108,6 +116,7 @@ class State:
             matrix[item[0]][item[1]] = 2
         return matrix
 
+        #check whether somebody wins
     def done(self):
         if 0 in [item[0] for item in self.white] or len(self.black) == 0:
             return 2
@@ -115,6 +124,7 @@ class State:
             return 1
         return 0
 
+        #check the current remaining pieces
     def myscore(self, turn):
         if turn == 1:
             return len(self.black)
@@ -163,27 +173,25 @@ class search:
         self.nodes = 0
         self.piece_num = 0
 
+        #max component
     def minimax_MAX(self, state, depth):
         if depth == self.maxdepth or state.done() != 0:
-            #print("choice", state.choice(self.turn))
             return state.choice(self.turn)
         result= -float("inf")
         for action in state.available_actions():
-            # print(state.transfer(action).getmatrix())
             result= max(result, self.minimax_MIN(state.transfer(action), depth + 1))
             self.nodes += 1
         return result
-
+        #min component
     def minimax_MIN(self, state, depth):
         if depth == self.maxdepth or state.done() != 0:
-            #print("choice", state.choice(self.turn))
             return state.choice(self.turn)
         result= float("inf")
         for action in state.available_actions():
             result= min(result, self.minimax_MAX(state.transfer(action), depth + 1))
             self.nodes += 1
         return result
-
+        #the implementation
     def minimax(self):
         final_action = None
         if self.type == 0:

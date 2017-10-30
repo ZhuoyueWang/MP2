@@ -30,9 +30,10 @@ class game:
                             [2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
                             [2, 2, 2, 2, 2, 2, 2, 2, 2, 2]]
 
+
+#run the game
     def run(self):
         self.clock.tick(60)
-        # clear the screen
         self.status = 5
         if self.status == 5:
             # Black
@@ -79,6 +80,8 @@ class game:
                     self.y = self.newY
         self.display()
 
+
+#get the result in terminal
     def display(self):
         if self.status == 3:
             if self.turn == 1:
@@ -134,6 +137,7 @@ class game:
                 x3 = self.x - 1
                 y3 = self.y
 
+#change the action in the screen
     def movechess(self):
         self.matrix[self.newX][self.newY] = self.matrix[self.x][self.y]
         self.matrix[self.x][self.y] = 0
@@ -143,8 +147,9 @@ class game:
             self.turn = 1
         self.status = 0
 
+#check the state whether is availble
     def isabletomove(self):
-        if checkMove == True:
+        if checkMove() == True:
             return 1
         return 0
 
@@ -169,6 +174,7 @@ class game:
         elif searchtype == 2:
             return self.move_alphabeta(evaluation)
 
+#call the minimax/alphabeta search
     def move_minimax(self, function_type):
         board, nodes, piece = search(self.matrix, self.turn, 3, function_type).minimax()
         self.moveNode(board,nodes,piece)
@@ -176,6 +182,8 @@ class game:
         board, nodes, piece = search(self.matrix, self.turn, 5, function_type).alphabet()
         self.moveNode(board,nodes,piece)
 
+
+#move the nodes
     def moveNode(self,board,nodes,piece):
         self.matrix = board.getmatrix()
         if self.turn == 1:
@@ -188,6 +196,7 @@ class game:
         if self.done():
             self.status = 3
 
+#check whether it is done
     def done(self):
         count = 0
         for i in self.matrix[0]:
