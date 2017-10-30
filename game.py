@@ -42,12 +42,12 @@ class game:
             # Black
             if self.turn == 1:
                 start = time.clock()
-                self.move(2, 3)
+                self.move(2, 4)
                 self.totalTime1 += (time.clock() - start)
                 self.totalStep1 += 1
             elif self.turn == 2:
                 start = time.clock()
-                self.move(2, 4)
+                self.move(2, 1)
                 self.totalTime2 += (time.clock() - start)
                 self.totalStep2 += 1
         for event in pygame.event.get():
@@ -130,7 +130,7 @@ class game:
                 x3 = self.x - 1
                 y3 = self.y
 
-    def isgoalstate(self):
+    def done(self):
         if 2 in self.matrix[0] or 1 in self.matrix[7]:
             return True
         else:
@@ -190,7 +190,7 @@ class game:
             self.totalNode2 += nodes
             self.turn = 1
         self.eaten = 16 - piece
-        if self.isgoalstate():
+        if self.done():
             self.status = 3
 
 def main():

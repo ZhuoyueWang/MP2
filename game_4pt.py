@@ -24,7 +24,6 @@ class game:
         self.totalStep1 = 0
         self.totalStep2 = 0
         self.eaten = 0
-        # matrix for position of chess, 0 - empty, 1 - black, 2 - white
         self.matrix = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -186,10 +185,10 @@ class game:
             self.totalNode2 += nodes
             self.turn = 1
         self.eaten = 20-piece
-        if self.isgoalstate():
+        if self.done():
             self.status = 3
 
-    def isgoalstate(self):
+    def done(self):
         count = 0
         for i in self.matrix[0]:
             if i == 2:
