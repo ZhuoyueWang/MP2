@@ -42,12 +42,12 @@ class game:
             # Black
             if self.turn == 1:
                 start = time.clock()
-                self.move(2, 3)
+                self.move(2, 4)
                 self.totalTime1 += (time.clock() - start)
                 self.totalStep1 += 1
             elif self.turn == 2:
                 start = time.clock()
-                self.move(2, 4)
+                self.move(2, 1)
                 self.totalTime2 += (time.clock() - start)
                 self.totalStep2 += 1
         for event in pygame.event.get():

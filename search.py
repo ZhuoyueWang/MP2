@@ -64,21 +64,21 @@ class State:
         if turn == 2:
             return 1
 
-    def singleMove(self,initial_pos, direction, turn):
+    def singleMove(self,initial, direction, turn):
         if turn == 1:
             if direction == 1:
-                return initial_pos[0] + 1, initial_pos[1] - 1
+                return initial[0] + 1, initial[1] - 1
             elif direction == 2:
-                return initial_pos[0] + 1, initial_pos[1]
+                return initial[0] + 1, initial[1]
             elif direction == 3:
-                return initial_pos[0] + 1, initial_pos[1] + 1
+                return initial[0] + 1, initial[1] + 1
         elif turn == 2:
             if direction == 1:
-                return initial_pos[0] - 1, initial_pos[1] - 1
+                return initial[0] - 1, initial[1] - 1
             elif direction == 2:
-                return initial_pos[0] - 1, initial_pos[1]
+                return initial[0] - 1, initial[1]
             elif direction == 3:
-                return initial_pos[0] - 1, initial_pos[1] + 1
+                return initial[0] - 1, initial[1] + 1
 
     def available_actions(self):
         available_actions = []
