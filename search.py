@@ -1,24 +1,24 @@
 import random
 
-class Action:
+class Status:
     def __init__(self, coordinate, direction, turn):
         self.coordinate = coordinate
         self.direction = direction
         self.turn = turn
 
 class State:
-    def __init__(self, matrix=None, black_position=None, white_position=None, black_num=0,
+    def __init__(self, matrix=None, black=None, white=None, black_num=0,
          white_num=0, turn=1, function=0, width=8, height=8):
         self.width = width
         self.height = height
-        if black_position is None:
+        if black is None:
             self.black = []
         else:
-            self.black = black_position
-        if white_position is None:
+            self.black = black
+        if white is None:
             self.white = []
         else:
-            self.white = white_position
+            self.white = white
         self.black_num = black_num
         self.white_num = white_num
         self.turn = turn
@@ -53,7 +53,7 @@ class State:
                 if new_pos in self.black:
                     black_pos.remove(new_pos)
 
-        state = State(black_position=black_pos, white_position=white_pos, black_num=self.black_num,
+        state = State(black=black_pos, white=white_pos, black_num=self.black_num,
         white_num=self.white_num, turn=self.switchTurn(action.turn), function=self.function,
         height=self.height, width=self.width)
         return state
@@ -85,19 +85,19 @@ class State:
         if self.turn == 1:
             for i in sorted(self.black, key=lambda p: (p[0], -p[1]), reverse=True):
                 if i[0] != self.height - 1 and i[1] != 0 and (i[0] + 1, i[1] - 1) not in self.black:
-                    available_actions.append(Action(i, 1, 1))
+                    available_actions.append(Status(i, 1, 1))
                 if i[0] != self.height - 1 and (i[0] + 1, i[1]) not in self.black and (i[0] + 1, i[1]) not in self.white:
-                    available_actions.append(Action(i, 2, 1))
+                    available_actions.append(Status(i, 2, 1))
                 if i[0] != self.height - 1 and i[1] != self.width - 1 and (i[0] + 1, i[1] + 1) not in self.black:
-                    available_actions.append(Action(i, 3, 1))
+                    available_actions.append(Status(i, 3, 1))
         elif self.turn == 2:
             for i in sorted(self.white, key=lambda p: (p[0], p[1])):
                 if i[0] != 0 and i[1] != 0 and (i[0] - 1, i[1] - 1) not in self.white:
-                    available_actions.append(Action(i, 1, 2))
+                    available_actions.append(Status(i, 1, 2))
                 if i[0] != 0 and (i[0] - 1, i[1]) not in self.black and (i[0] - 1, i[1]) not in self.white:
-                    available_actions.append(Action(i, 2, 2))
+                    available_actions.append(Status(i, 2, 2))
                 if i[0] != 0 and i[1] != self.width - 1 and (i[0] - 1, i[1] + 1) not in self.white:
-                    available_actions.append(Action(i, 3, 2))
+                    available_actions.append(Status(i, 3, 2))
         return available_actions
 
     def getmatrix(self):
