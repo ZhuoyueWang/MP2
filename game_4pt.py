@@ -24,7 +24,6 @@ class game:
         self.totalStep1 = 0
         self.totalStep2 = 0
         self.eaten = 0
-        # matrix for position of chess, 0 - empty, 1 - black, 2 - white
         self.matrix = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

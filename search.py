@@ -12,13 +12,13 @@ class State:
         self.width = width
         self.height = height
         if black_position is None:
-            self.black_positions = []
+            self.black = []
         else:
-            self.black_positions = black_position
+            self.black = black_position
         if white_position is None:
-            self.white_positions = []
+            self.white = []
         else:
-            self.white_positions = white_position
+            self.white = white_position
         self.black_num = black_num
         self.white_num = white_num
         self.turn = turn
@@ -27,30 +27,30 @@ class State:
             for i in range(self.height):
                 for j in range(self.width):
                     if matrix[i][j] == 1:
-                        self.black_positions.append((i, j))
+                        self.black.append((i, j))
                         self.black_num += 1
                     if matrix[i][j] == 2:
-                        self.white_positions.append((i, j))
+                        self.white.append((i, j))
                         self.white_num += 1
 
     def transfer(self, action):
-        black_pos = list(self.black_positions)
-        white_pos = list(self.white_positions)
+        black_pos = list(self.black)
+        white_pos = list(self.white)
         # black turn
         if action.turn == 1:
-            if action.coordinate in self.black_positions:
+            if action.coordinate in self.black:
                 index = black_pos.index(action.coordinate)
                 new_pos = self.singleMove(action.coordinate, action.direction, action.turn)
                 black_pos[index] = new_pos
-                if new_pos in self.white_positions:
+                if new_pos in self.white:
                     white_pos.remove(new_pos)
         # white turn
         elif action.turn == 2:
-            if action.coordinate in self.white_positions:
+            if action.coordinate in self.white:
                 index = white_pos.index(action.coordinate)
                 new_pos = self.singleMove(action.coordinate, action.direction, action.turn)
                 white_pos[index] = new_pos
-                if new_pos in self.black_positions:
+                if new_pos in self.black:
                     black_pos.remove(new_pos)
 
         state = State(black_position=black_pos, white_position=white_pos, black_num=self.black_num,
@@ -83,49 +83,49 @@ class State:
     def available_actions(self):
         available_actions = []
         if self.turn == 1:
-            for i in sorted(self.black_positions, key=lambda p: (p[0], -p[1]), reverse=True):
-                if i[0] != self.height - 1 and i[1] != 0 and (i[0] + 1, i[1] - 1) not in self.black_positions:
+            for i in sorted(self.black, key=lambda p: (p[0], -p[1]), reverse=True):
+                if i[0] != self.height - 1 and i[1] != 0 and (i[0] + 1, i[1] - 1) not in self.black:
                     available_actions.append(Action(i, 1, 1))
-                if i[0] != self.height - 1 and (i[0] + 1, i[1]) not in self.black_positions and (i[0] + 1, i[1]) not in self.white_positions:
+                if i[0] != self.height - 1 and (i[0] + 1, i[1]) not in self.black and (i[0] + 1, i[1]) not in self.white:
                     available_actions.append(Action(i, 2, 1))
-                if i[0] != self.height - 1 and i[1] != self.width - 1 and (i[0] + 1, i[1] + 1) not in self.black_positions:
+                if i[0] != self.height - 1 and i[1] != self.width - 1 and (i[0] + 1, i[1] + 1) not in self.black:
                     available_actions.append(Action(i, 3, 1))
         elif self.turn == 2:
-            for i in sorted(self.white_positions, key=lambda p: (p[0], p[1])):
-                if i[0] != 0 and i[1] != 0 and (i[0] - 1, i[1] - 1) not in self.white_positions:
+            for i in sorted(self.white, key=lambda p: (p[0], p[1])):
+                if i[0] != 0 and i[1] != 0 and (i[0] - 1, i[1] - 1) not in self.white:
                     available_actions.append(Action(i, 1, 2))
-                if i[0] != 0 and (i[0] - 1, i[1]) not in self.black_positions and (i[0] - 1, i[1]) not in self.white_positions:
+                if i[0] != 0 and (i[0] - 1, i[1]) not in self.black and (i[0] - 1, i[1]) not in self.white:
                     available_actions.append(Action(i, 2, 2))
-                if i[0] != 0 and i[1] != self.width - 1 and (i[0] - 1, i[1] + 1) not in self.white_positions:
+                if i[0] != 0 and i[1] != self.width - 1 and (i[0] - 1, i[1] + 1) not in self.white:
                     available_actions.append(Action(i, 3, 2))
         return available_actions
 
     def getmatrix(self):
         matrix = [[0 for i in range(self.width)] for i in range(self.height)]
-        for item in self.black_positions:
+        for item in self.black:
             matrix[item[0]][item[1]] = 1
-        for item in self.white_positions:
+        for item in self.white:
             matrix[item[0]][item[1]] = 2
         return matrix
 
     def isgoalstate(self):
-        if 0 in [item[0] for item in self.white_positions] or len(self.black_positions) == 0:
+        if 0 in [item[0] for item in self.white] or len(self.black) == 0:
             return 2
-        if self.height - 1 in [item[0] for item in self.black_positions] or len(self.white_positions) == 0:
+        if self.height - 1 in [item[0] for item in self.black] or len(self.white) == 0:
             return 1
         return 0
 
     def myscore(self, turn):
         if turn == 1:
-            return len(self.black_positions)
+            return len(self.black)
         elif turn == 2:
-            return len(self.white_positions)
+            return len(self.white)
 
     def enemyscore(self, turn):
         if turn == 1:
-            return len(self.white_positions)
+            return len(self.white)
         elif turn == 2:
-            return len(self.black_positions)
+            return len(self.black)
 
     def offensive(self, turn):
         return 6*(30-self.enemyscore(turn)) +random.random()
