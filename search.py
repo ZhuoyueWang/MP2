@@ -108,7 +108,7 @@ class State:
             matrix[item[0]][item[1]] = 2
         return matrix
 
-    def isgoalstate(self):
+    def done(self):
         if 0 in [item[0] for item in self.white] or len(self.black) == 0:
             return 2
         if self.height - 1 in [item[0] for item in self.black] or len(self.white) == 0:
@@ -164,7 +164,7 @@ class search:
         self.piece_num = 0
 
     def minimax_MAX(self, state, depth):
-        if depth == self.maxdepth or state.isgoalstate() != 0:
+        if depth == self.maxdepth or state.done() != 0:
             #print("choice", state.choice(self.turn))
             return state.choice(self.turn)
         result= -float("inf")
@@ -175,7 +175,7 @@ class search:
         return result
 
     def minimax_MIN(self, state, depth):
-        if depth == self.maxdepth or state.isgoalstate() != 0:
+        if depth == self.maxdepth or state.done() != 0:
             #print("choice", state.choice(self.turn))
             return state.choice(self.turn)
         result= float("inf")
@@ -187,14 +187,14 @@ class search:
     def minimax(self):
         final_action = None
         if self.type == 0:
-            initialstate = State(matrix=self.matrix, turn=self.turn, function=self.function)
+            initial = State(matrix=self.matrix, turn=self.turn, function=self.function)
         else:
-            initialstate = State(matrix=self.matrix, turn=self.turn, function=self.function, height=5, width=10)
+            initial = State(matrix=self.matrix, turn=self.turn, function=self.function, height=5, width=10)
         result= -float("inf")
-        for action in initialstate.available_actions():
+        for action in initial.available_actions():
             self.nodes += 1
-            new_state = initialstate.transfer(action)
-            if new_state.isgoalstate():
+            new_state = initial.transfer(action)
+            if new_state.done():
                 final_action = action
                 break
             minresult = self.minimax_MIN(new_state, 1)
@@ -202,16 +202,16 @@ class search:
                 final_action = action
                 result= minresult
         if self.turn == 1:
-            temp = initialstate.transfer(final_action)
+            temp = initial.transfer(final_action)
             self.piece_num = temp.white_num
         elif self.turn == 2:
-            temp = initialstate.transfer(final_action)
+            temp = initial.transfer(final_action)
             self.piece_num = temp.black_num
-        return initialstate.transfer(final_action), self.nodes, self.piece_num
+        return initial.transfer(final_action), self.nodes, self.piece_num
 
 
     def alphabeta_MAX(self, state, alpha, beta, depth):
-        if depth == self.maxdepth or state.isgoalstate() != 0:
+        if depth == self.maxdepth or state.done() != 0:
             return state.choice(self.turn)
         result = -float("inf")
         actions = state.available_actions()
@@ -225,7 +225,7 @@ class search:
         return result
 
     def alphabeta_MIN(self, state, alpha, beta, depth):
-        if depth == self.maxdepth or state.isgoalstate() != 0:
+        if depth == self.maxdepth or state.done() != 0:
             return state.choice(self.turn)
         result = float("inf")
         actions = state.available_actions()
@@ -242,14 +242,14 @@ class search:
     def alphabet(self):
         final_action = None
         if self.type == 0:
-            initialstate = State(matrix=self.matrix, turn=self.turn, function=self.function)
+            initial = State(matrix=self.matrix, turn=self.turn, function=self.function)
         else:
-            initialstate = State(matrix=self.matrix, turn=self.turn, function=self.function, height=5, width=10)
+            initial = State(matrix=self.matrix, turn=self.turn, function=self.function, height=5, width=10)
         result = -float("inf")
-        for action in initialstate.available_actions():
+        for action in initial.available_actions():
             self.nodes += 1
-            new_state = initialstate.transfer(action)
-            if new_state.isgoalstate():
+            new_state = initial.transfer(action)
+            if new_state.done():
                 final_action = action
                 break
             minresult = self.alphabeta_MIN(new_state, -float("inf"), float("inf"), 1)
@@ -257,12 +257,12 @@ class search:
                 final_action = action
                 result = minresult
         if self.turn == 1:
-            temp = initialstate.transfer(final_action)
+            temp = initial.transfer(final_action)
             self.piece_num = temp.white_num
         elif self.turn == 2:
-            temp = initialstate.transfer(final_action)
+            temp = initial.transfer(final_action)
             self.piece_num = temp.black_num
-        return initialstate.transfer(final_action), self.nodes, self.piece_num
+        return initial.transfer(final_action), self.nodes, self.piece_num
 
     def none(self, action, state):
         return 0

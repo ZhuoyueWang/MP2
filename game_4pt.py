@@ -185,10 +185,10 @@ class game:
             self.totalNode2 += nodes
             self.turn = 1
         self.eaten = 20-piece
-        if self.isgoalstate():
+        if self.done():
             self.status = 3
 
-    def isgoalstate(self):
+    def done(self):
         count = 0
         for i in self.matrix[0]:
             if i == 2:
